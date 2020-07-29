@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+	    <referenceBlock name="product.info.details">
+	    	<block class="HTCMage\ProductAttachment\Block\Products\Attachment\Attachment" name="attachment.tab" as="attachment" template="HTCMage_ProductAttachment::products/attachment.phtml" group="detailed_info" ifconfig="attachment/general/enable">
+	            <arguments>
+	                <argument name="sort_order" xsi:type="string">40</argument>
+	            </arguments>
+	        </block>
+	    </referenceBlock>
+	    <referenceBlock name="product.info.options.wrapper.bottom">
+	    	<block class="Magento\Framework\View\Element\Template"
+	               name="productattachment-after-addtocart" template="HTCMage_ProductAttachment::products/productattachment.phtml" after="product.info.addtocart.additional">
+	            <arguments>
+	                <argument name="idProductAttachment" xsi:type="string">after-addtocart-attachment</argument>
+	            </arguments>
+	        </block>
+	    </referenceBlock>
+	    <referenceContainer name="product.info.form.content">
+	    	<block class="Magento\Framework\View\Element\Template"
+	               name="productattachment-after-addtocart-content" template="HTCMage_ProductAttachment::products/productattachment.phtml" after="product.info.addtocart">
+	            <arguments>
+	                <argument name="idProductAttachment" xsi:type="string">after-addtocart-attachment</argument>
+	            </arguments>
+	        </block>
+	    </referenceContainer>
+	    <referenceContainer name="footer">
+	        <block class="Magento\Framework\View\Element\Template"
+	               name="productattachment-after-addtocart" template="HTCMage_ProductAttachment::products/productattachment.phtml" after="product.info.addtocart.additional">
+	            <arguments>
+	                <argument name="idProductAttachment" xsi:type="string">after-footer-attachment</argument>
+	            </arguments>
+	        </block>
+	    </referenceContainer>
+	    <referenceContainer name="content">
+            <block class="HTCMage\ProductAttachment\Block\Products\Attachment\UpdateAttachment" name="update.attachment.product"
+                   template="HTCMage_ProductAttachment::products/uploadproductattachment.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <title>ProductAttachment</title>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="HTCMage\ProductAttachment\Block\Adminhtml\Edit" name="attact"/>
+            <uiComponent name='attachment_attachment_form'/>
+        </referenceContainer>
+    </body>
+</page>

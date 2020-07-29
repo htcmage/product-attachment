@@ -1,0 +1,16 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="attachment_attachment_data_source" xsi:type="string">HTCMage\ProductAttachment\Model\ResourceModel\Attachment\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="HTCMage\ProductAttachment\Model\ResourceModel\Attachment\Grid\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">htcmage_productattachment</argument>
+            <argument name="eventPrefix" xsi:type="string">htcmage_productattachment</argument>
+            <argument name="resourceModel" xsi:type="string">HTCMage\ProductAttachment\Model\ResourceModel\Attachment</argument>
+        </arguments>
+    </type>
+</config>

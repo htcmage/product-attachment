@@ -1,0 +1,11 @@
+<?php
+$listProductAttachment = $block->getData('listProductAttachment'); 
+?>
+
+<?php foreach ($listProductAttachment as $attachment): ?>
+	<div style="margin-bottom: 20px;">
+		<label><?=__($attachment['title'])?></label><br>
+		<img src="<?=$block->getPathIcon($attachment['icon'])?>" alt="" width="50px" height="50px">
+		<a href="<?=$block->getPathFile($attachment['file'])?>" title=""><?=__($attachment['file'])?></a>
+	</div>
+<?php endforeach ?>
