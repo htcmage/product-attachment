@@ -4,6 +4,10 @@ namespace HTCMage\ProductAttachment\Model\ResourceModel\AttachmentDisplay;
 
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 
+/**
+ * Class Collection
+ * @package HTCMage\ProductAttachment\Model\ResourceModel\AttachmentDisplay
+ */
 class Collection extends AbstractCollection
 {
     /**
@@ -12,9 +16,12 @@ class Collection extends AbstractCollection
      * Can be used by collections with items without defined
      *
      * @var string
-
      */
     protected $_idFieldName = 'id';
+
+    /**
+     *
+     */
     protected function _construct()
     {
         $this->_init('HTCMage\ProductAttachment\Model\AttachmentDisplay', 'HTCMage\ProductAttachment\Model\ResourceModel\AttachmentDisplay');

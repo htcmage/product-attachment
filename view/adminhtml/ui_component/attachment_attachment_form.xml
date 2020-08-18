@@ -5,7 +5,8 @@
  * See COPYING.txt for license details.
  */
 -->
-<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
     <argument name="data" xsi:type="array">
         <item name="js_config" xsi:type="array">
             <item name="provider" xsi:type="string">attachment_attachment_form.attachment_attachment_data_source</item>
@@ -15,7 +16,8 @@
     </argument>
     <settings>
         <buttons>
-            <button name="save_and_continue" class="HTCMage\ProductAttachment\Block\Adminhtml\Edit\SaveAndContinueButton"/>
+            <button name="save_and_continue"
+                    class="HTCMage\ProductAttachment\Block\Adminhtml\Edit\SaveAndContinueButton"/>
         </buttons>
         <namespace>attachment_attachment_form</namespace>
         <dataScope>data</dataScope>
@@ -32,7 +34,8 @@
         <settings>
             <submitUrl path="attachment/attachment/save"/>
         </settings>
-        <dataProvider class="HTCMage\ProductAttachment\Model\Attachment\DataProvider" name="attachment_attachment_data_source">
+        <dataProvider class="HTCMage\ProductAttachment\Model\Attachment\DataProvider"
+                      name="attachment_attachment_data_source">
             <settings>
                 <requestFieldName>id</requestFieldName>
                 <primaryFieldName>id</primaryFieldName>
@@ -147,11 +150,14 @@
                             <value>1</value>
                             <actions>
                                 <action name="0">
-                                    <target>attachment_attachment_form.attachment_attachment_form.file_information.url</target>
+                                    <target>attachment_attachment_form.attachment_attachment_form.file_information.url
+                                    </target>
                                     <callback>show</callback>
                                 </action>
                                 <action name="1">
-                                    <target>attachment_attachment_form.attachment_attachment_form.file_information.file</target>
+                                    <target>
+                                        attachment_attachment_form.attachment_attachment_form.file_information.file
+                                    </target>
                                     <callback>hide</callback>
                                 </action>
                             </actions>
@@ -160,18 +166,21 @@
                             <value>0</value>
                             <actions>
                                 <action name="0">
-                                    <target>attachment_attachment_form.attachment_attachment_form.file_information.url</target>
+                                    <target>attachment_attachment_form.attachment_attachment_form.file_information.url
+                                    </target>
                                     <callback>hide</callback>
                                 </action>
                                 <action name="1">
-                                    <target>attachment_attachment_form.attachment_attachment_form.file_information.file</target>
+                                    <target>
+                                        attachment_attachment_form.attachment_attachment_form.file_information.file
+                                    </target>
                                     <callback>show</callback>
                                 </action>
                             </actions>
                         </rule>
                     </rules>
                     <enabled>true</enabled>
-                </switcherConfig> 
+                </switcherConfig>
             </settings>
         </field>
         <field name="file">
@@ -225,7 +234,9 @@
                             <value>1</value>
                             <actions>
                                 <action name="0">
-                                    <target>attachment_attachment_form.attachment_attachment_form.file_information.number_of_download</target>
+                                    <target>
+                                        attachment_attachment_form.attachment_attachment_form.file_information.number_of_download
+                                    </target>
                                     <callback>show</callback>
                                 </action>
                             </actions>
@@ -234,14 +245,16 @@
                             <value>0</value>
                             <actions>
                                 <action name="0">
-                                    <target>attachment_attachment_form.attachment_attachment_form.file_information.number_of_download</target>
+                                    <target>
+                                        attachment_attachment_form.attachment_attachment_form.file_information.number_of_download
+                                    </target>
                                     <callback>hide</callback>
                                 </action>
                             </actions>
                         </rule>
                     </rules>
                     <enabled>true</enabled>
-                </switcherConfig> 
+                </switcherConfig>
             </settings>
             <formElements>
                 <checkbox>
@@ -261,7 +274,7 @@
                     <rule name="validate-number" xsi:type="boolean">true</rule>
                 </validation>
                 <dataType>text</dataType>
-                <label translate="true">Number of Download</label>
+                <label translate="true">Number of download remaining</label>
                 <visible>true</visible>
                 <dataScope>number_of_download</dataScope>
             </settings>
@@ -283,26 +296,37 @@
                 </item>
             </argument>
         </field>
-        <field name="store_id">
+        <field name="store_id" formElement="multiselect">
             <argument name="data" xsi:type="array">
-                <item name="options" xsi:type="object">Magento\Store\Model\ResourceModel\Store\Collection</item>
                 <item name="config" xsi:type="array">
-                    <item name="dataType" xsi:type="string">text</item>
-                    <item name="label" translate="true" xsi:type="string">Store View</item>
-                    <item name="formElement" xsi:type="string">multiselect</item>
-                    <item name="source" xsi:type="string">attachment</item>
-                    <item name="sortOrder" xsi:type="number">40</item>
-                    <item name="dataScope" xsi:type="string">store_id</item>
-                    <item name="default" xsi:type="string">1</item>
-                    <item name="validation" xsi:type="array">
-                        <item name="required-entry" xsi:type="boolean">true</item>
-                    </item>
+                    <item name="source" xsi:type="string">block</item>
+                    <item name="default" xsi:type="number">0</item>
                 </item>
             </argument>
+            <settings>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+                <dataType>int</dataType>
+                <tooltip>
+                    <link>https://docs.magento.com/m2/ce/user_guide/configuration/scope.html</link>
+                    <description>What is this?</description>
+                </tooltip>
+                <label translate="true">Store View</label>
+                <dataScope>store_id</dataScope>
+            </settings>
+            <formElements>
+                <multiselect>
+                    <settings>
+                        <options class="Magento\Cms\Ui\Component\Listing\Column\Cms\Options"/>
+                    </settings>
+                </multiselect>
+            </formElements>
         </field>
         <field name="display">
             <argument name="data" xsi:type="array">
-                <item name="options" xsi:type="object">HTCMage\ProductAttachment\Ui\Component\Listing\Column\Display</item>
+                <item name="options" xsi:type="object">HTCMage\ProductAttachment\Ui\Component\Listing\Column\Display
+                </item>
                 <item name="config" xsi:type="array">
                     <item name="dataType" xsi:type="string">text</item>
                     <item name="label" translate="true" xsi:type="string">Display</item>
@@ -322,7 +346,7 @@
     <fieldset name="product">
         <settings>
             <collapsible>true</collapsible>
-            <label translate="true">Product</label>
+            <label translate="true">Assign Product</label>
         </settings>
         <container name="assign_products_container_" sortOrder="160">
             <htmlContent name="html_content">

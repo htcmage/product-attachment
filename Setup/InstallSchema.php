@@ -2,11 +2,15 @@
 
 namespace HTCMage\ProductAttachment\Setup;
 
+use Magento\Framework\DB\Ddl\Table;
 use Magento\Framework\Setup\InstallSchemaInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
-use Magento\Framework\DB\Ddl\Table;
 
+/**
+ * Class InstallSchema
+ * @package HTCMage\ProductAttachment\Setup
+ */
 class InstallSchema implements InstallSchemaInterface
 {
     /**
@@ -24,7 +28,7 @@ class InstallSchema implements InstallSchemaInterface
          */
         if (!$installer->tableExists('htcmage_productattachment')) {
             $table = $installer->getConnection()->newTable(
-            $installer->getTable('htcmage_productattachment')
+                $installer->getTable('htcmage_productattachment')
             )->addColumn(
                 'id',
                 Table::TYPE_SMALLINT,
@@ -77,7 +81,7 @@ class InstallSchema implements InstallSchemaInterface
                 'number_of_download',
                 Table::TYPE_INTEGER,
                 null,
-                ['nullable' => false,'default' => '0'],
+                ['nullable' => false, 'default' => '0'],
                 'Number of Download'
             )->addColumn(
                 'display',
@@ -89,15 +93,15 @@ class InstallSchema implements InstallSchemaInterface
                 'position',
                 Table::TYPE_INTEGER,
                 null,
-                ['nullable' => false,'default' => '0'],
+                ['nullable' => false, 'default' => '0'],
                 'Position'
             );
             $installer->getConnection()->createTable($table);
         }
-        
+
         if (!$installer->tableExists('htcmage_productattachment_product')) {
             $table = $installer->getConnection()->newTable(
-            $installer->getTable('htcmage_productattachment_product')
+                $installer->getTable('htcmage_productattachment_product')
             )->addColumn(
                 'id',
                 Table::TYPE_SMALLINT,
@@ -105,33 +109,33 @@ class InstallSchema implements InstallSchemaInterface
                 ['identity' => true, 'nullable' => false, 'primary' => true],
                 'ID'
             )
-            ->addColumn(
-                'id_attachment',
-                Table::TYPE_SMALLINT,
-                null,
-                ['nullable' => false],
-                'Id Attachment'
-            )->addColumn(
-                'id_product',
-                Table::TYPE_INTEGER,
-                null,
-                ['nullable' => false,'unsigned'=>true],
-                'Id Product'
-            )
-            ->addForeignKey(
-                $setup->getFkName('htcmage_productattachment_product', 'id_attachment', 'htcmage_productattachment', 'id'),
-                'id_attachment',
-                $setup->getTable('htcmage_productattachment'),
-                'id',
-                Table::ACTION_CASCADE
-            )
-            ->addForeignKey(
-                $setup->getFkName('htcmage_productattachment_product', 'id_product', 'catalog_product_entity', 'entity_id'),
-                'id_product',
-                $setup->getTable('catalog_product_entity'),
-                'entity_id',
-                Table::ACTION_CASCADE
-            );
+                ->addColumn(
+                    'id_attachment',
+                    Table::TYPE_SMALLINT,
+                    null,
+                    ['nullable' => false],
+                    'Id Attachment'
+                )->addColumn(
+                    'id_product',
+                    Table::TYPE_INTEGER,
+                    null,
+                    ['nullable' => false, 'unsigned' => true],
+                    'Id Product'
+                )
+                ->addForeignKey(
+                    $setup->getFkName('htcmage_productattachment_product', 'id_attachment', 'htcmage_productattachment', 'id'),
+                    'id_attachment',
+                    $setup->getTable('htcmage_productattachment'),
+                    'id',
+                    Table::ACTION_CASCADE
+                )
+                ->addForeignKey(
+                    $setup->getFkName('htcmage_productattachment_product', 'id_product', 'catalog_product_entity', 'entity_id'),
+                    'id_product',
+                    $setup->getTable('catalog_product_entity'),
+                    'entity_id',
+                    Table::ACTION_CASCADE
+                );
             $installer->getConnection()->createTable($table);
         }
 
@@ -166,12 +170,12 @@ class InstallSchema implements InstallSchemaInterface
                 'id',
                 Table::ACTION_CASCADE
             )->addForeignKey(
-                    $setup->getFkName('htcmage_productattachment_store_view', 'store_id', 'store', 'store_id'),
-                    'store_id',
-                    $setup->getTable('store'),
-                    'store_id',
-                    Table::ACTION_CASCADE
-                );
+                $setup->getFkName('htcmage_productattachment_store_view', 'store_id', 'store', 'store_id'),
+                'store_id',
+                $setup->getTable('store'),
+                'store_id',
+                Table::ACTION_CASCADE
+            );
             $installer->getConnection()->createTable($table);
         }
 
@@ -206,12 +210,12 @@ class InstallSchema implements InstallSchemaInterface
                 'id',
                 Table::ACTION_CASCADE
             )->addForeignKey(
-                    $setup->getFkName('htcmage_productattachment_customer_group', 'store_id', 'customer_group', 'customer_group_id'),
-                    'group_id',
-                    $setup->getTable('customer_group'),
-                    'customer_group_id',
-                    Table::ACTION_CASCADE
-                );
+                $setup->getFkName('htcmage_productattachment_customer_group', 'store_id', 'customer_group', 'customer_group_id'),
+                'group_id',
+                $setup->getTable('customer_group'),
+                'customer_group_id',
+                Table::ACTION_CASCADE
+            );
             $installer->getConnection()->createTable($table);
         }
 

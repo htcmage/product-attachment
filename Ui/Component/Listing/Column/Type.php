@@ -1,7 +1,14 @@
 <?php
+
 namespace HTCMage\ProductAttachment\Ui\Component\Listing\Column;
 
-class Type implements \Magento\Framework\Option\ArrayInterface
+use Magento\Framework\Option\ArrayInterface;
+
+/**
+ * Class Type
+ * @package HTCMage\ProductAttachment\Ui\Component\Listing\Column
+ */
+class Type implements ArrayInterface
 {
     /**
      * Options getter

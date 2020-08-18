@@ -2,21 +2,33 @@
 
 namespace HTCMage\ProductAttachment\Controller\Adminhtml\Attachment;
 
+use Exception;
+use HTCMage\ProductAttachment\Model\Repository\AttachmentRepository;
 use Magento\Backend\App\Action;
+use Magento\Backend\Model\View\Result\Redirect;
 
+/**
+ * Class Delete
+ * @package HTCMage\ProductAttachment\Controller\Adminhtml\Attachment
+ */
 class Delete extends Action
 {
 
+    /**
+     * @var AttachmentRepository
+     */
     protected $attachmentRepository;
 
     /**
+     * Delete constructor.
      * @param Action\Context $context
-     * @param \Bss\Testimonials\Model\TestimonialFactory $testimonialFactory
+     * @param AttachmentRepository $attachmentRepository
      */
     public function __construct(
         Action\Context $context,
-        \HTCMage\ProductAttachment\Model\Repository\AttachmentRepository $attachmentRepository
-    ) {
+        AttachmentRepository $attachmentRepository
+    )
+    {
         $this->attachmentRepository = $attachmentRepository;
         parent::__construct($context);
     }
@@ -24,14 +36,13 @@ class Delete extends Action
     /**
      * Delete action
      *
-     * @return \Magento\Backend\Model\View\Result\Redirect
+     * @return Redirect
      */
     public function execute()
     {
-        // check if we know what should be deleted
         $id = $this->getRequest()->getParam('id');
 
-        /** @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect */
+        /** @var Redirect $resultRedirect */
         $resultRedirect = $this->resultRedirectFactory->create();
         if ($id) {
 
@@ -42,16 +53,12 @@ class Delete extends Action
                     __('Att has been deleted.')
                 );
                 return $resultRedirect->setPath('*/*/');
-            } catch (\Exception $e) {
-                // display error message
+            } catch (Exception $e) {
                 $this->messageManager->addErrorMessage($e->getMessage());
-                // go back to edit form
                 return $resultRedirect->setPath('attachment/attachment/index');
             }
         }
-        // display error message
         $this->messageManager->addError(__('We can\'t find a att to delete.'));
-        // go to grid
         return $resultRedirect->setPath('attachment/attachment/index');
     }
 }

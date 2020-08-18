@@ -1,34 +1,35 @@
 <?php
-/**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
- */
 
-/**
- * Product in category grid
- *
- * @author      Magento Core Team <core@magentocommerce.com>
- */
 namespace HTCMage\ProductAttachment\Block\Adminhtml\Edit\Tab;
 
+use Magento\Backend\Block\Template\Context;
 use Magento\Backend\Block\Widget\Grid;
 use Magento\Backend\Block\Widget\Grid\Column;
 use Magento\Backend\Block\Widget\Grid\Extended;
+use Magento\Backend\Helper\Data;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\Catalog\Model\Product\Visibility;
+use Magento\Catalog\Model\ProductFactory;
+use Magento\Directory\Model\Currency;
 use Magento\Framework\App\ObjectManager;
+use Magento\Framework\Registry;
+use Magento\Store\Model\ScopeInterface;
 
-class Product extends \Magento\Backend\Block\Widget\Grid\Extended
+/**
+ * Class Product
+ * @package HTCMage\ProductAttachment\Block\Adminhtml\Edit\Tab
+ */
+class Product extends Extended
 {
     /**
      * Core registry
      *
-     * @var \Magento\Framework\Registry
+     * @var Registry
      */
     protected $_coreRegistry = null;
 
     /**
-     * @var \Magento\Catalog\Model\ProductFactory
+     * @var ProductFactory
      */
     protected $_productFactory;
 
@@ -43,28 +44,37 @@ class Product extends \Magento\Backend\Block\Widget\Grid\Extended
     private $visibility;
 
     /**
-     * @param \Magento\Backend\Block\Template\Context $context
-     * @param \Magento\Backend\Helper\Data $backendHelper
-     * @param \Magento\Catalog\Model\ProductFactory $productFactory
-     * @param \Magento\Framework\Registry $coreRegistry
+     * @param Context $context
+     * @param Data $backendHelper
+     * @param ProductFactory $productFactory
+     * @param Registry $coreRegistry
      * @param array $data
      * @param Visibility|null $visibility
      * @param Status|null $status
      */
     public function __construct(
-        \Magento\Backend\Block\Template\Context $context,
-        \Magento\Backend\Helper\Data $backendHelper,
-        \Magento\Catalog\Model\ProductFactory $productFactory,
-        \Magento\Framework\Registry $coreRegistry,
+        Context $context,
+        Data $backendHelper,
+        ProductFactory $productFactory,
+        Registry $coreRegistry,
         array $data = [],
         Visibility $visibility = null,
         Status $status = null
-    ) {
+    )
+    {
         $this->_productFactory = $productFactory;
         $this->_coreRegistry = $coreRegistry;
         $this->visibility = $visibility ?: ObjectManager::getInstance()->get(Visibility::class);
         $this->status = $status ?: ObjectManager::getInstance()->get(Status::class);
         parent::__construct($context, $backendHelper, $data);
+    }
+
+    /**
+     * @return string
+     */
+    public function getGridUrl()
+    {
+        return $this->getUrl('attachment/attachment/grid', ['_current' => true]);
     }
 
     /**
@@ -75,15 +85,7 @@ class Product extends \Magento\Backend\Block\Widget\Grid\Extended
         parent::_construct();
         $this->setId('catalog_category_products');
         $this->setDefaultSort('entity_id');
-        // $this->setUseAjax(true);
-    }
-
-    /**
-     * @return array|null
-     */
-    public function getProductAttachment()
-    {
-        return $this->_coreRegistry->registry('product_attachment');
+        $this->setUseAjax(true);
     }
 
     /**
@@ -92,8 +94,41 @@ class Product extends \Magento\Backend\Block\Widget\Grid\Extended
      */
     protected function _addColumnFilterToCollection($column)
     {
-        parent::_addColumnFilterToCollection($column);
+        // parent::_addColumnFilterToCollection($column);
+        if ($column->getId() == 'in_category') {
+            $attachmentIds = $this->_getSelectedProducts();
+            if (empty($attachmentIds)) {
+                $attachmentIds = 0;
+            }
+            if ($column->getFilter()->getValue()) {
+                $this->getCollection()->addFieldToFilter('entity_id', ['in' => $attachmentIds]);
+            } elseif (!empty($attachmentIds)) {
+                $this->getCollection()->addFieldToFilter('entity_id', ['nin' => $attachmentIds]);
+            }
+        } else {
+            parent::_addColumnFilterToCollection($column);
+        }
         return $this;
+    }
+
+    /**
+     * @return array|null
+     */
+    protected function _getSelectedProducts()
+    {
+        $productAttachment = $this->getRequest()->getPost('selected_products');
+        if ($productAttachment === null) {
+            $productAttachment = $this->getProductAttachment();
+        }
+        return $productAttachment;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getProductAttachment()
+    {
+        return $this->_coreRegistry->registry('product_attachment');
     }
 
     /**
@@ -112,14 +147,14 @@ class Product extends \Magento\Backend\Block\Widget\Grid\Extended
         )->addAttributeToSelect(
             'price'
         )
-        ->joinField(
-            'position',
-            'catalog_category_product',
-            'position',
-            'product_id=entity_id',
-            'category_id=' . (int)$this->getRequest()->getParam('id', 0),
-            'left'
-        );
+            ->joinField(
+                'position',
+                'catalog_category_product',
+                'position',
+                'product_id=entity_id',
+                'category_id=' . (int)$this->getRequest()->getParam('id', 0),
+                'left'
+            );
         $storeId = (int)$this->getRequest()->getParam('store', 0);
         if ($storeId > 0) {
             $collection->addStoreFilter($storeId);
@@ -185,8 +220,8 @@ class Product extends \Magento\Backend\Block\Widget\Grid\Extended
                 'header' => __('Price'),
                 'type' => 'currency',
                 'currency_code' => (string)$this->_scopeConfig->getValue(
-                    \Magento\Directory\Model\Currency::XML_PATH_CURRENCY_BASE,
-                    \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                    Currency::XML_PATH_CURRENCY_BASE,
+                    ScopeInterface::SCOPE_STORE
                 ),
                 'index' => 'price'
             ]
@@ -197,21 +232,13 @@ class Product extends \Magento\Backend\Block\Widget\Grid\Extended
                 'header' => __('Position'),
                 'type' => 'number',
                 'index' => 'position',
-                'default'=>'2',
-                'column_css_class'=>'no-display',
-                'header_css_class'=>'no-display',
+                'default' => '2',
+                'column_css_class' => 'no-display',
+                'header_css_class' => 'no-display',
                 'editable' => true
             ]
         );
 
         return parent::_prepareColumns();
-    }
-    protected function _getSelectedProducts()
-    {
-        $products = $this->getRequest()->getPost('selected_products');
-        if ($products === null) {
-            $productAttachment = $this->getProductAttachment();
-        }
-        return $productAttachment;
     }
 }

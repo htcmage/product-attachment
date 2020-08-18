@@ -5,10 +5,12 @@
  * See COPYING.txt for license details.
  */
 -->
-<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
     <argument name="data" xsi:type="array">
         <item name="js_config" xsi:type="array">
-            <item name="provider" xsi:type="string">attachment_attachment_listing.attachment_attachment_data_source</item>
+            <item name="provider" xsi:type="string">attachment_attachment_listing.attachment_attachment_data_source
+            </item>
         </item>
     </argument>
     <settings>
@@ -80,6 +82,28 @@
                     <label translate="true">Delete</label>
                 </settings>
             </action>
+            <action name="enable">
+                <settings>
+                    <confirm>
+                        <message translate="true">Are you sure you want to enable selected items?</message>
+                        <title translate="true">Enable</title>
+                    </confirm>
+                    <url path="attachment/attachment/massEnable"/>
+                    <type>enable</type>
+                    <label translate="true">Enable</label>
+                </settings>
+            </action>
+            <action name="disable">
+                <settings>
+                    <confirm>
+                        <message translate="true">Are you sure you want to disable selected items?</message>
+                        <title translate="true">Disable</title>
+                    </confirm>
+                    <url path="attachment/attachment/massDisable"/>
+                    <type>disable</type>
+                    <label translate="true">Disable</label>
+                </settings>
+            </action>
         </massaction>
         <paging name="listing_paging"/>
     </listingToolbar>
@@ -92,11 +116,15 @@
                 </param>
                 <param name="indexField" xsi:type="string">block_id</param>
                 <param name="enabled" xsi:type="boolean">true</param>
-                <param name="selectProvider" xsi:type="string">attachment_attachment_listing.attachment_attachment.product_attachment_columns.ids</param>
+                <param name="selectProvider" xsi:type="string">
+                    attachment_attachment_listing.attachment_attachment.product_attachment_columns.ids
+                </param>
             </editorConfig>
             <childDefaults>
                 <param name="fieldAction" xsi:type="array">
-                    <item name="provider" xsi:type="string">attachment_attachment_listing.attachment_attachment.product_attachment_columns_editor</item>
+                    <item name="provider" xsi:type="string">
+                        attachment_attachment_listing.attachment_attachment.product_attachment_columns_editor
+                    </item>
                     <item name="target" xsi:type="string">startEdit</item>
                     <item name="params" xsi:type="array">
                         <item name="0" xsi:type="string">${ $.$data.rowIndex }</item>
@@ -130,7 +158,7 @@
             </settings>
         </column>
         <column name="status">
-             <argument name="data" xsi:type="array">
+            <argument name="data" xsi:type="array">
                 <item name="options" xsi:type="object">Magento\Config\Model\Config\Source\Yesno</item>
                 <item name="config" xsi:type="array">
                     <item name="sortOrder" xsi:type="number">50</item>
@@ -139,7 +167,7 @@
                     <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/select</item>
                     <item name="dataType" xsi:type="string">select</item>
                     <item name="editor" xsi:type="array">
-                    <item name="editorType" xsi:type="string">select</item>
+                        <item name="editorType" xsi:type="string">select</item>
                         <item name="validation" xsi:type="array">
                             <item name="required-entry" xsi:type="boolean">false</item>
                         </item>
@@ -170,24 +198,6 @@
                 </editor>
                 <label translate="true">File</label>
             </settings>
-        </column>
-        <column name="custommer_group">
-            <argument name="data" xsi:type="array">
-                <item name="sortOrder" xsi:type="number">30</item>
-                <item name="options" xsi:type="object">HTCMage\ProductAttachment\Ui\Component\Listing\Column\CustomerGroup</item>
-                <item name="config" xsi:type="array">
-                    <item name="filter" xsi:type="string">select</item>
-                    <item name="label" xsi:type="string" translate="true">Customer Group</item>
-                    <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/select</item>
-                    <item name="dataType" xsi:type="string">select</item>
-                    <item name="editor" xsi:type="array">
-                    <item name="editorType" xsi:type="string">select</item>
-                        <item name="validation" xsi:type="array">
-                            <item name="required-entry" xsi:type="boolean">false</item>
-                        </item>
-                    </item>
-                </item>
-            </argument>
         </column>
         <actionsColumn name="actions" class="HTCMage\ProductAttachment\Ui\Component\Listing\Column\Actions">
             <settings>

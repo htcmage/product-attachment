@@ -10,17 +10,29 @@
 namespace HTCMage\ProductAttachment\Model\Repository;
 
 use Exception;
+use HTCMage\ProductAttachment\Model\AttachmentCustomerGroup;
+use HTCMage\ProductAttachment\Model\AttachmentCustomerGroupFactory;
 use Magento\Customer\Model\Context;
 use Magento\Customer\Model\Group;
 use Magento\Customer\Model\Session;
 use Magento\Group\Model\GroupManagerInterface;
 
 
+/**
+ * Class AttachmentCustomerGroupRepository
+ * @package HTCMage\ProductAttachment\Model\Repository
+ */
 class AttachmentCustomerGroupRepository
 {
 
+    /**
+     * @var AttachmentCustomerGroupFactory
+     */
     private $attachmentCustomerGroupFactory;
 
+    /**
+     * @var ResourceModel\Attachment|\HTCMage\ProductAttachment\Model\ResourceModel\AttachmentCustomerGroup
+     */
     private $resource;
 
     /**
@@ -33,12 +45,33 @@ class AttachmentCustomerGroupRepository
      * @param ResourceModel\Attachment $resource
      */
     public function __construct(
-        \HTCMage\ProductAttachment\Model\AttachmentCustomerGroupFactory $attachmentCustomerGroupFactory,
+        AttachmentCustomerGroupFactory $attachmentCustomerGroupFactory,
         \HTCMage\ProductAttachment\Model\ResourceModel\AttachmentCustomerGroup $resource
     )
     {
         $this->attachmentCustomerGroupFactory = $attachmentCustomerGroupFactory;
         $this->resource = $resource;
+    }
+
+    /**
+     * @param $listGroup
+     * @param $attachmentId
+     * @return bool
+     */
+    public function saveGroupLinks($listGroup, $attachmentId)
+    {
+        $model = $this->getById();
+        $this->deleteGroupLink($attachmentId);
+        if (!empty($listGroup)) {
+            foreach ($listGroup as $groupId) {
+                $dataGroup['group_id'] = $groupId;
+                $dataGroup['id_attachment'] = $attachmentId;
+                $model->setData($dataGroup);
+                $this->save($model);
+            }
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -57,19 +90,27 @@ class AttachmentCustomerGroupRepository
     }
 
     /**
-     * Save process
-     *
-     * @param Attachment $modelAttachmentCustomerGroup
-     * @return Attachment|null
+     * @param $idAttachment
      */
-    public function save(\HTCMage\ProductAttachment\Model\AttachmentCustomerGroup $modelAttachmentCustomerGroup)
+    public function deleteGroupLink($idAttachment)
     {
-        try {
-            $this->resource->save($modelAttachmentCustomerGroup);
-            return $modelAttachmentCustomerGroup;
-        } catch (Exception $exception) {
-            return null;
+        $model = $this->getById();
+        $data = $this->getGroupLinkByAttachment($idAttachment);
+        foreach ($data as $value) {
+            $model->load($value['id']);
+            $this->delete($model);
         }
+    }
+
+    /**
+     * @param $idAttachment
+     * @return mixed
+     */
+    public function getGroupLinkByAttachment($idAttachment)
+    {
+        $collection = $this->getById()->getCollection();
+        $collection->addFieldToFilter('id_attachment', ['eq' => "$idAttachment"]);
+        return $collection->getData();
     }
 
     /**
@@ -78,7 +119,7 @@ class AttachmentCustomerGroupRepository
      * @param Attachment $modelAttachmentCustomerGroup
      * @return bool
      */
-    public function delete(\HTCMage\ProductAttachment\Model\AttachmentCustomerGroup $modelAttachmentCustomerGroup)
+    public function delete(AttachmentCustomerGroup $modelAttachmentCustomerGroup)
     {
         try {
             $this->resource->delete($modelAttachmentCustomerGroup);
@@ -87,36 +128,19 @@ class AttachmentCustomerGroupRepository
         }
     }
 
-
-    public function saveGroupLinks($listGroup, $attachmentId)
+    /**
+     * Save process
+     *
+     * @param Attachment $modelAttachmentCustomerGroup
+     * @return Attachment|null
+     */
+    public function save(AttachmentCustomerGroup $modelAttachmentCustomerGroup)
     {
-        $model = $this->getById();
-        $this->deleteGroupLink($attachmentId);
-        if ( ! empty( $listGroup ) ) {
-            foreach ( $listGroup as $groupId ) {
-                $dataGroup['group_id'] = $groupId;
-                $dataGroup['id_attachment'] = $attachmentId;
-                $model->setData( $dataGroup );
-                $this->save($model);
-            }
-        } else {
-            return false;
-        }
-    }
-
-    public function getGroupLinkByAttachment($idAttachment)
-    {
-        $collection = $this->getById()->getCollection();
-        $collection->addFieldToFilter('id_attachment', ['eq' => "$idAttachment"]);
-        return $collection->getData();
-    }
-
-    public function deleteGroupLink($idAttachment){
-        $model = $this->getById();
-        $data = $this->getGroupLinkByAttachment($idAttachment);
-        foreach ($data as $value) {
-            $model->load($value['id']);
-            $this->delete($model);
+        try {
+            $this->resource->save($modelAttachmentCustomerGroup);
+            return $modelAttachmentCustomerGroup;
+        } catch (Exception $exception) {
+            return null;
         }
     }
 }

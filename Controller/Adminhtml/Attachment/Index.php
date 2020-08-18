@@ -2,7 +2,18 @@
 
 namespace HTCMage\ProductAttachment\Controller\Adminhtml\Attachment;
 
-class Index extends \Magento\Backend\App\Action
+use Magento\Backend\App\Action;
+use Magento\Backend\App\Action\Context;
+use Magento\Backend\Model\View\Result\Page;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Registry;
+use Magento\Framework\View\Result\PageFactory;
+
+/**
+ * Class Index
+ * @package HTCMage\ProductAttachment\Controller\Adminhtml\Attachment
+ */
+class Index extends Action
 {
     /**
      * Authorization level of a basic admin session
@@ -11,19 +22,20 @@ class Index extends \Magento\Backend\App\Action
      */
     const ADMIN_RESOURCE = 'Magento_Catalog::attachments_management';
     /**
-     * @var \Magento\Framework\View\Result\PageFactory
+     * @var PageFactory
      */
     protected $resultPageFactory;
 
     /**
-     * @param \Magento\Backend\App\Action\Context $context
-     * @param \Magento\Framework\Registry $coreRegistry
-     * @param \Magento\Framework\View\Result\PageFactory $resultPageFactory
+     * @param Context $context
+     * @param Registry $coreRegistry
+     * @param PageFactory $resultPageFactory
      */
     public function __construct(
-        \Magento\Backend\App\Action\Context $context,
-        \Magento\Framework\View\Result\PageFactory $resultPageFactory
-    ) {
+        Context $context,
+        PageFactory $resultPageFactory
+    )
+    {
         $this->resultPageFactory = $resultPageFactory;
         parent::__construct($context);
     }
@@ -31,13 +43,13 @@ class Index extends \Magento\Backend\App\Action
     /**
      * Index action
      *
-     * @return \Magento\Framework\Controller\ResultInterface
+     * @return ResultInterface
      */
     public function execute()
     {
-        /** @var \Magento\Backend\Model\View\Result\Page $resultPage */
+        /** @var Page $resultPage */
         $resultPage = $this->resultPageFactory->create();
-       $resultPage->setActiveMenu('Magento_Catalog::attachments_management')
+        $resultPage->setActiveMenu('Magento_Catalog::attachments_management')
             ->addBreadcrumb(__('Product Attachment'), __('Product Attachment'))->getConfig()->getTitle()->prepend(__('All Product Attachment'));
 
         return $resultPage;

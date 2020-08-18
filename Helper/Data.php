@@ -2,35 +2,80 @@
 
 namespace HTCMage\ProductAttachment\Helper;
 
-use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Customer\Model\Context;
+use Magento\Customer\Model\Session;
+use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\Framework\App\Helper\AbstractHelper;
+use Magento\Store\Model\ScopeInterface;
+use Magento\Framework\UrlInterface;
 
-class Data extends \Magento\Framework\App\Helper\AbstractHelper
+/**
+ * Class Data
+ * @package HTCMage\ProductAttachment\Helper
+ */
+class Data extends AbstractHelper
 {
-   protected $_customerSession;
     /**
+     * @var Session
+     */
+    protected $_customerSession;
+    /**
+     * @var StoreManagerInterface
+     */
+    protected $storeManagerInterface;
+
+    /**
+     * Data constructor.
      * @param \Magento\Framework\App\Helper\Context $context
-     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
-     * @param \Magento\MediaStorage\Model\File\UploaderFactory $uploaderFactory
-     * @param \Magento\Framework\Image\AdapterFactory $adapterFactory
-     * @param \Magento\Framework\Message\ManagerInterface $messageManager
-     * @param \Magento\Framework\ObjectManagerInterface $objectManager
-     * @param \Magento\Framework\App\Http\Context $httpContext
+     * @param Session $customerSession
      */
     public function __construct(
         \Magento\Framework\App\Helper\Context $context,
-        \Magento\Customer\Model\Session $customerSession
-    ) {
+        \Magento\Store\Model\StoreManagerInterface $storeManagerInterface,
+        Session $customerSession
+    )
+    {
         $this->_customerSession = $customerSession;
+        $this->storeManagerInterface = $storeManagerInterface;
         parent::__construct($context);
     }
 
-    public function CustomerGroup()
+    /**
+     * @return mixed
+     */
+    public function getCustomerGroup()
     {
-        $customerGroup = false;
-        if($this->_customerSession->isLoggedIn()){
-            $customerGroup=$this->_customerSession->getCustomer()->getGroupId();
-        }
+        $customerGroup = $this->_customerSession->getCustomer()->getGroupId();
         return $customerGroup;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStore()
+    {
+        $currentStore = $this->storeManagerInterface->getStore()->getId();
+        return $currentStore;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function isEnable()
+    {
+        $storeScope = ScopeInterface::SCOPE_STORES;
+        return $this->scopeConfig->getValue('attachment/general/enable', $storeScope);
+    }
+
+        /**
+     * @param $file
+     * @return string
+     */
+    public function getPathFile($file)
+    {
+        $path = $this->storeManagerInterface->getStore()->getBaseUrl(
+                UrlInterface::URL_TYPE_MEDIA
+            ) . 'htcmage/attachment/file/';
+        return $path . $file;
     }
 }

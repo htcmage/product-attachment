@@ -2,77 +2,68 @@
 
 namespace HTCMage\ProductAttachment\Controller\Attachment;
 
+use HTCMage\ProductAttachment\Model\Repository\AttachmentRepository;
 use Magento\Backend\App\Action\Context;
-use Magento\Cms\Model\Template\FilterProvider;
-use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Action;
-use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Framework\App\Request\Http;
-use Magento\Framework\App\ResponseInterface;
-use Magento\Framework\Controller\ResultInterface;
-use Magento\Framework\Registry;
 use Magento\Framework\Controller\Result\JsonFactory;
-use Magento\Store\Model\ScopeInterface;
-use Magento\Store\Model\StoreManagerInterface;
 use Magento\Framework\View\Result\PageFactory;
+use HTCMage\ProductAttachment\Helper\Data;
 
+/**
+ * Class ResultAjax
+ * @package HTCMage\ProductAttachment\Controller\Attachment
+ */
 class ResultAjax extends Action
 {
-
+    /**
+     * Const
+     */
+    const DISPLAY_DETAIL = 0;
+    /**
+     * Const
+     */
+    const DISPLAY_FOOTER = 1;
+    /**
+     * Const
+     */
+    const DISPLAY_AFTER_CART = 2;
     /**
      * @var
      */
     protected $attachmentRepository;
     /**
-     * @var Session
-     */
-    protected $customerSession;
-    /**
-     * @var StoreManagerInterface
-     */
-    protected $storeManagerInterface;
-    /**
-     * @var ScopeConfigInterface
-     */
-    protected $scopeConfig;
-    /**
      * @var JsonHelper
      */
     protected $resultJsonFactory;
     /**
-     * @var FilterProvider
+     * @var resultPageFactory
      */
     protected $resultPageFactory;
-
+    /**
+     * @var helper
+     */
+    protected $helper;
 
 
     /**
      * ResultAjax constructor.
      * @param Context $context
-     * @param Session $customerSession
      * @param HTCMage\ProductAttachment\Model\Repository\AttachmentRepository $attachmentRepository
-     * @param \HTCMage\ProductAttachment\Model\Repository\AttachmentStoreViewRepository $attachmentStoreViewRepository
-     * @param StoreManagerInterface $storeManagerInterface
      * @param resultJsonFactory $resultJsonFactory
-     * @param ScopeConfigInterface $scopeConfig
      */
     public function __construct(
         Context $context,
-        Session $customerSession,
-        \HTCMage\ProductAttachment\Model\Repository\AttachmentRepository $attachmentRepository,
-        StoreManagerInterface $storeManagerInterface,
+        AttachmentRepository $attachmentRepository,
         PageFactory $resultPageFactory,
         JsonFactory $resultJsonFactory,
-        ScopeConfigInterface $scopeConfig
+        Data $helper
     )
     {
         parent::__construct($context);
         $this->attachmentRepository = $attachmentRepository;
-        $this->customerSession = $customerSession;
-        $this->storeManagerInterface = $storeManagerInterface;
-        $this->scopeConfig = $scopeConfig;
         $this->resultJsonFactory = $resultJsonFactory;
         $this->resultPageFactory = $resultPageFactory;
+        $this->helper = $helper;
 
     }
 
@@ -83,17 +74,21 @@ class ResultAjax extends Action
      */
     public function execute()
     {
-        if ($this->isEnable() == 1) {
+        if ($this->helper->isEnable() == 1) {
             $result = $this->resultJsonFactory->create();
-            $data['detail'] = $this->getHtml($this->listAttachment(0));
-            $data['aftercart'] = $this->getHtml($this->listAttachment(1));
-            $data['footer'] = $this->getHtml($this->listAttachment(2));
+            $data['detail'] = trim($this->getHtml($this->listAttachment($this::DISPLAY_DETAIL)));
+            $data['footer'] = trim($this->getHtml($this->listAttachment($this::DISPLAY_FOOTER)));
+            $data['aftercart'] = trim($this->getHtml($this->listAttachment($this::DISPLAY_AFTER_CART)));
             return $result->setData($data);
         }
-        // return $this->getResponse()->setBody($this->resultJsonFactory->serialize($listProductAttachment));
     }
 
-    public function getHtml($listProductAttachment){
+    /**
+     * @param $listProductAttachment
+     * @return mixed
+     */
+    public function getHtml($listProductAttachment)
+    {
         $resultPage = $this->resultPageFactory->create();
         $html = $resultPage->getLayout()
             ->createBlock('HTCMage\ProductAttachment\Block\Products\Attachment\Attachment')->setData('listProductAttachment', $listProductAttachment)
@@ -107,10 +102,10 @@ class ResultAjax extends Action
      */
     public function listAttachment($display)
     {
-        $store = $this->getStore();
-        $customerGroup = $this->getCustomerGroup();
+        $store = $this->helper->getStore();
+        $customerGroup = $this->helper->getCustomerGroup();
         $productId = $this->getRequest()->getParam('product');
-        $listAttachment = $this->attachmentRepository->getAttachment($display, $store, $customerGroup, $productId);       
+        $listAttachment = $this->attachmentRepository->getAttachment($display, $store, $customerGroup, $productId);
         $data = [];
         if ($listAttachment) {
             foreach ($listAttachment as $attachment) {
@@ -118,36 +113,11 @@ class ResultAjax extends Action
                     if ($attachment['number_of_download'] > 0) {
                         array_push($data, $attachment);
                     }
-                }else{
+                } else {
                     array_push($data, $attachment);
                 }
             }
         }
         return $data;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function isEnable()
-    {
-        $storeScope = ScopeInterface::SCOPE_STORES;
-        return $this->scopeConfig->getValue('attachment/general/enable', $storeScope);
-    }
-
-    public function getCustomerGroup()
-    {
-        $customerGroup = $this->customerSession->getCustomer()->getGroupId();
-        return $customerGroup;
-    }
-
-    public function getStore()
-    {
-        $currentStore = $this->storeManagerInterface->getStore()->getId();
-        return $currentStore;
-    }
-
-    public function checkQtyDownload($attachment){
-
     }
 }

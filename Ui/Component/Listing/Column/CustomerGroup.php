@@ -1,13 +1,29 @@
 <?php
+
 namespace HTCMage\ProductAttachment\Ui\Component\Listing\Column;
 
-class CustomerGroup implements \Magento\Framework\Option\ArrayInterface
-{
-   private $groupCollection;
+use Magento\Customer\Model\ResourceModel\Group\CollectionFactory;
+use Magento\Framework\Option\ArrayInterface;
 
+/**
+ * Class CustomerGroup
+ * @package HTCMage\ProductAttachment\Ui\Component\Listing\Column
+ */
+class CustomerGroup implements ArrayInterface
+{
+    /**
+     * @var CollectionFactory
+     */
+    private $groupCollection;
+
+    /**
+     * CustomerGroup constructor.
+     * @param CollectionFactory $groupCollection
+     */
     public function __construct(
-        \Magento\Customer\Model\ResourceModel\Group\CollectionFactory $groupCollection
-    ) {
+        CollectionFactory $groupCollection
+    )
+    {
         $this->groupCollection = $groupCollection;
     }
 

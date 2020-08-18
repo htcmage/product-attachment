@@ -2,31 +2,47 @@
 
 namespace HTCMage\ProductAttachment\Model\Attachment;
 
-use Magento\Framework\App\Request\DataPersistorInterface;
+use HTCMage\ProductAttachment\Model\Repository\AttachmentCustomerGroupRepository;
+use HTCMage\ProductAttachment\Model\Repository\AttachmentDisplayRepository;
+use HTCMage\ProductAttachment\Model\Repository\AttachmentStoreViewRepository;
 use HTCMage\ProductAttachment\Model\ResourceModel\Attachment\CollectionFactory;
+use Magento\Framework\App\Request\DataPersistorInterface;
+use Magento\Framework\UrlInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\Ui\DataProvider\AbstractDataProvider;
 
-class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
+/**
+ * Class DataProvider
+ * @package HTCMage\ProductAttachment\Model\Attachment
+ */
+class DataProvider extends AbstractDataProvider
 {
-
-    private $loadedData;
-
-    /**
-     * @var \Magento\Framework\App\Request\DataPersistorInterface
-     */
-    private $dataPersistor;
 
     /**
      * @var \Prince\Faq\Model\ResourceModel\Faq\CollectionFactory
      */
-    
+
     public $collection;
-
+    /**
+     * @var AttachmentStoreViewRepository
+     */
     protected $attachmentStoreViewRepository;
-
+    /**
+     * @var AttachmentCustomerGroupRepository
+     */
     protected $attachmentCustomerGroupRepository;
-
+    /**
+     * @var AttachmentDisplayRepository
+     */
     protected $attachmentDisplayRepository;
+    /**
+     * @var
+     */
+    private $loadedData;
+    /**
+     * @var DataPersistorInterface
+     */
+    private $dataPersistor;
 
     /**
      * Constructor
@@ -46,12 +62,13 @@ class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
         CollectionFactory $collectionFactory,
         DataPersistorInterface $dataPersistor,
         StoreManagerInterface $storeManager,
-        \HTCMage\ProductAttachment\Model\Repository\AttachmentStoreViewRepository $attachmentStoreViewRepository,
-        \HTCMage\ProductAttachment\Model\Repository\AttachmentCustomerGroupRepository $attachmentCustomerGroupRepository,
-        \HTCMage\ProductAttachment\Model\Repository\AttachmentDisplayRepository $attachmentDisplayRepository,
+        AttachmentStoreViewRepository $attachmentStoreViewRepository,
+        AttachmentCustomerGroupRepository $attachmentCustomerGroupRepository,
+        AttachmentDisplayRepository $attachmentDisplayRepository,
         array $meta = [],
         array $data = []
-    ) {
+    )
+    {
         $this->collection = $collectionFactory->create();
         $this->dataPersistor = $dataPersistor;
         $this->storeManager = $storeManager;
@@ -75,44 +92,44 @@ class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
         foreach ($items as $model) {
             $this->loadedData[$model->getId()] = $model->getData();
             $fullData = $this->loadedData;
-            if ( $model->getIcon() ) {
+            if ($model->getIcon()) {
                 $m['icon'][0]['name'] = $model->getIcon();
-                $m['icon'][0]['url'] = $this->getMediaUrl().$model->getIcon();
+                $m['icon'][0]['url'] = $this->getMediaUrl() . $model->getIcon();
             }
 
             if ($model->getFile()) {
                 $m['file'][0]['name'] = $model->getFile();
-                $m['file'][0]['url'] = $this->getMediaUrlFile().$model->getFile();
+                $m['file'][0]['url'] = $this->getMediaUrlFile() . $model->getFile();
             }
             $idAttachment = $model->getId();
             $collection = $this->attachmentStoreViewRepository->getById()->getCollection();
             $collection->addFieldToFilter('id_attachment', ['eq' => "$idAttachment"]);
             $storeLink = $collection->getData();
             $listStore = [];
-            foreach ( $storeLink as $data ) {
+            foreach ($storeLink as $data) {
                 $listStore[] = $data['store_id'];
             }
-            $storeId = implode( ',', $listStore);
+            $storeId = implode(',', $listStore);
             $m['store_id'] = $storeId;
 
             $collection = $this->attachmentCustomerGroupRepository->getById()->getCollection();
             $collection->addFieldToFilter('id_attachment', ['eq' => "$idAttachment"]);
             $customerGroup = $collection->getData();
             $group = [];
-            foreach ( $customerGroup as $data ) {
+            foreach ($customerGroup as $data) {
                 $group[] = $data['group_id'];
             }
-            $customerGroup = implode( ',', $group);
+            $customerGroup = implode(',', $group);
             $m['customer_group'] = $group;
 
             $collection = $this->attachmentDisplayRepository->getById()->getCollection();
             $collection->addFieldToFilter('id_attachment', ['eq' => "$idAttachment"]);
             $displayAttachment = $collection->getData();
             $display = [];
-            foreach ( $displayAttachment as $data ) {
+            foreach ($displayAttachment as $data) {
                 $display[] = $data['display'];
             }
-            $displayAttachment = implode( ',', $display);
+            $displayAttachment = implode(',', $display);
             $m['display'] = $display;
 
             $this->loadedData[$model->getId()] = array_merge($fullData[$model->getId()], $m);
@@ -129,16 +146,24 @@ class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
 
         return $this->loadedData;
     }
+
+    /**
+     * @return string
+     */
     public function getMediaUrl()
     {
         $mediaUrl = $this->storeManager->getStore()
-            ->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA).'htcmage/attachment/';
+                ->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . 'htcmage/attachment/';
         return $mediaUrl;
     }
-     public function getMediaUrlFile()
+
+    /**
+     * @return string
+     */
+    public function getMediaUrlFile()
     {
         $mediaUrlFile = $this->storeManager->getStore()
-            ->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA).'htcmage/attachment/file/';
+                ->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . 'htcmage/attachment/file/';
         return $mediaUrlFile;
     }
 }

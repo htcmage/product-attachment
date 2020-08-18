@@ -2,19 +2,26 @@
 
 namespace HTCMage\ProductAttachment\Ui\Component\Listing\Column;
 
+use Magento\Framework\App\ObjectManager;
+use Magento\Framework\Escaper;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
 use Magento\Ui\Component\Listing\Columns\Column;
-use Magento\Framework\App\ObjectManager;
-use Magento\Framework\Escaper;
 
+/**
+ * Class Actions
+ * @package HTCMage\ProductAttachment\Ui\Component\Listing\Column
+ */
 class Actions extends Column
 {
     /**
      * Url path
      */
     const URL_PATH_EDIT = 'attachment/attachment/edit';
+    /**
+     *
+     */
     const URL_PATH_DELETE = 'attachment/attachment/delete';
     // const URL_PATH_DETAILS = 'attachment/attachment/details';
 
@@ -43,7 +50,8 @@ class Actions extends Column
         UrlInterface $urlBuilder,
         array $components = [],
         array $data = []
-    ) {
+    )
+    {
         $this->urlBuilder = $urlBuilder;
         parent::__construct($context, $uiComponentFactory, $components, $data);
     }

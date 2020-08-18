@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Magento_Catalog::catalog">
+                    <resource id="Magento_Catalog::attachments" title="Attachments" sortOrder="300">
+                        <resource id="Magento_Catalog::attachments_management" title="Attachments Management"
+                                  translate="title" sortOrder="10">
+                            <resource id="HTCMage_ProductAttachment::delete" title="Delete" translate="title"
+                                      sortOrder="10"/>
+                            <resource id="HTCMage_ProductAttachment::save" title="Save" translate="title"
+                                      sortOrder="20"/>
+                        </resource>
+                    </resource>
+                </resource>
+                <resource id="Magento_Backend::stores">
+                    <resource id="Magento_Backend::stores_settings">
+                        <resource id="Magento_Config::config">
+                            <resource id="HTCMage_ProductAttachment::attachment_config"
+                                      title="HTCMage Product Attachment Section" translate="title" sortOrder="60"/>
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>

@@ -1,11 +1,10 @@
 <?php
-$listProductAttachment = $block->getData('listProductAttachment'); 
+$listProductAttachment = $block->getData('listProductAttachment');
 ?>
 
 <?php foreach ($listProductAttachment as $attachment): ?>
-	<div style="margin-bottom: 20px;">
-		<label><?=__($attachment['title'])?></label><br>
-		<img src="<?=$block->getPathIcon($attachment['icon'])?>" alt="" width="50px" height="50px">
-		<a href="<?=$block->getPathFile($attachment['file'])?>" title=""><?=__($attachment['file'])?></a>
-	</div>
+   	<div class="attachment-product-download" data-id-attachment="<?= $attachment['id'] ?>">
+        <img src="<?= $block->getPathIcon($attachment['icon']) ?>" alt="<?= __($attachment['title']) ?>">
+        <p class="title"><?= __($attachment['title']) ?><span class="limit-download"><?= $block->getCountDownload($attachment) ?? "" ?></span></p>
+    </div>
 <?php endforeach ?>

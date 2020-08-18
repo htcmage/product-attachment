@@ -1,49 +1,37 @@
 <?php
-/**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
- */
 
 namespace HTCMage\ProductAttachment\Block\Products\Attachment;
 
-use Magento\Store\Model\StoreManagerInterface;
-class UpdateAttachment extends \Magento\Backend\Block\Template
+use Magento\Backend\Block\Template;
+use Magento\Backend\Block\Template\Context;
+use Magento\Framework\Registry;
+
+/**
+ * Class UpdateAttachment
+ * @package HTCMage\ProductAttachment\Block\Products\Attachment
+ */
+class UpdateAttachment extends Template
 {
-
     /**
-     * AssignProducts constructor.
-     *
-     * @param \Magento\Backend\Block\Template\Context $context
-     * @param \Magento\Framework\Registry $registry
-     * @param \Magento\Framework\Json\EncoderInterface $jsonEncoder
-     * @param array $data
+     * @var Registry
      */
-    protected $model;
-
-    private $storeManager;
-
     protected $_registry;
 
-    protected $helper;
-    
-    protected $modelEnv;
-
+    /**
+     * UpdateAttachment constructor.
+     * @param Context $context
+     * @param AttachmentFactory $model
+     * @param Registry $registry
+     * @param array $data
+     */
     public function __construct(
-        \Magento\Backend\Block\Template\Context $context,
-        \HTCMage\ProductAttachment\Model\AttachmentFactory $model,
-        \HTCMage\ProductAttachment\Model\ProductAttachmentFactory $modelEnv,
-        StoreManagerInterface $storeManager,
-        \HTCMage\ProductAttachment\Helper\Data $helper,
-        \Magento\Framework\Registry $registry,
+        Context $context,
+        Registry $registry,
         array $data = []
-    ) {
+    )
+    {
         parent::__construct($context, $data);
-        $this->storeManager = $storeManager;
-        $this->helper = $helper;
         $this->_registry = $registry;
-        $this->setTabTitle();
-        $this->model = $model;
-        $this->modelEnv = $modelEnv;
     }
 
     /**
@@ -54,8 +42,20 @@ class UpdateAttachment extends \Magento\Backend\Block\Template
         return $this->getUrl('attachment/attachment/resultajax');
     }
 
+    /**
+     * @return mixed
+     */
+    public function urlDowload()
+    {
+        return $this->getUrl('attachment/attachment/attachmentdowload');
+    }
 
-    public function getProductId(){
-        return $this->_registry->registry('current_product')->getID();
+
+    /**
+     * @return mixed
+     */
+    public function getProductId()
+    {
+        return $this->_registry->registry('current_product')->getId();
     }
 }

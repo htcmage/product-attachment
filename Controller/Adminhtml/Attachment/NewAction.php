@@ -2,21 +2,31 @@
 
 namespace HTCMage\ProductAttachment\Controller\Adminhtml\Attachment;
 
-class NewAction extends \Magento\Backend\App\Action
+use Magento\Backend\App\Action;
+use Magento\Backend\App\Action\Context;
+use Magento\Backend\Model\View\Result\Forward;
+use Magento\Backend\Model\View\Result\ForwardFactory;
+
+/**
+ * Class NewAction
+ * @package HTCMage\ProductAttachment\Controller\Adminhtml\Attachment
+ */
+class NewAction extends Action
 {
     /**
-     * @var \Magento\Backend\Model\View\Result\Forward
+     * @var Forward
      */
     protected $resultForwardFactory;
 
     /**
-     * @param \Magento\Backend\App\Action\Context $context
-     * @param \Magento\Backend\Model\View\Result\ForwardFactory $resultForwardFactory
+     * @param Context $context
+     * @param ForwardFactory $resultForwardFactory
      */
     public function __construct(
-        \Magento\Backend\App\Action\Context $context,
-        \Magento\Backend\Model\View\Result\ForwardFactory $resultForwardFactory
-    ) {
+        Context $context,
+        ForwardFactory $resultForwardFactory
+    )
+    {
         $this->resultForwardFactory = $resultForwardFactory;
         parent::__construct($context);
     }
@@ -24,11 +34,11 @@ class NewAction extends \Magento\Backend\App\Action
     /**
      * Forward to edit
      *
-     * @return \Magento\Backend\Model\View\Result\Forward
+     * @return Forward
      */
     public function execute()
     {
-        /** @var \Magento\Backend\Model\View\Result\Forward $resultForward */
+        /** @var Forward $resultForward */
         $resultForward = $this->resultForwardFactory->create();
         return $resultForward->forward('edit');
     }

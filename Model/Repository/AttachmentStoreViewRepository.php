@@ -10,17 +10,29 @@
 namespace HTCMage\ProductAttachment\Model\Repository;
 
 use Exception;
+use HTCMage\ProductAttachment\Model\AttachmentStoreViewFactory;
+use HTCMage\ProductAttachment\Model\ResourceModel\AttachmentStoreView;
 use Magento\Customer\Model\Context;
 use Magento\Customer\Model\Group;
 use Magento\Customer\Model\Session;
 use Magento\Store\Model\StoreManagerInterface;
 
 
+/**
+ * Class AttachmentStoreViewRepository
+ * @package HTCMage\ProductAttachment\Model\Repository
+ */
 class AttachmentStoreViewRepository
 {
 
+    /**
+     * @var AttachmentStoreViewFactory
+     */
     private $attachmentStoreFactory;
 
+    /**
+     * @var ResourceModel\Attachment|AttachmentStoreView
+     */
     private $resource;
 
     /**
@@ -33,27 +45,12 @@ class AttachmentStoreViewRepository
      * @param ResourceModel\Attachment $resource
      */
     public function __construct(
-        \HTCMage\ProductAttachment\Model\AttachmentStoreViewFactory $attachmentStoreFactory,
-        \HTCMage\ProductAttachment\Model\ResourceModel\AttachmentStoreView $resource
+        AttachmentStoreViewFactory $attachmentStoreFactory,
+        AttachmentStoreView $resource
     )
     {
         $this->attachmentStoreFactory = $attachmentStoreFactory;
         $this->resource = $resource;
-    }
-
-    /**
-     * Get Attachment by id
-     *
-     * @param int|null $id
-     * @return Attachment
-     */
-    public function getById($id = null)
-    {
-        $model = $this->attachmentStoreFactory->create();
-        if ($id) {
-            $this->resource->load($model, $id);
-        }
-        return $model;
     }
 
     /**
@@ -87,16 +84,20 @@ class AttachmentStoreViewRepository
         }
     }
 
-
+    /**
+     * @param $listStore
+     * @param $attachmentId
+     * @return bool
+     */
     public function saveStoreLinks($listStore, $attachmentId)
     {
         $model = $this->getById();
         $this->deleteStoreLink($attachmentId);
-        if ( ! empty( $listStore ) ) {
-            foreach ( $listStore as $storeId ) {
+        if (!empty($listStore)) {
+            foreach ($listStore as $storeId) {
                 $dataStore['store_id'] = $storeId;
                 $dataStore['id_attachment'] = $attachmentId;
-                $model->setData( $dataStore );
+                $model->setData($dataStore);
                 $model->save();
             }
         } else {
@@ -104,19 +105,42 @@ class AttachmentStoreViewRepository
         }
     }
 
-    public function getStoreLinkByAttachment($idAttachment)
+    /**
+     * Get Attachment by id
+     *
+     * @param int|null $id
+     * @return Attachment
+     */
+    public function getById($id = null)
     {
-        $collection = $this->getById()->getCollection();
-        $collection->addFieldToFilter('id_attachment', ['eq' => "$idAttachment"]);
-        return $collection->getData();
+        $model = $this->attachmentStoreFactory->create();
+        if ($id) {
+            $this->resource->load($model, $id);
+        }
+        return $model;
     }
 
-    public function deleteStoreLink($idAttachment){
+    /**
+     * @param $idAttachment
+     */
+    public function deleteStoreLink($idAttachment)
+    {
         $model = $this->getById();
         $data = $this->getStoreLinkByAttachment($idAttachment);
         foreach ($data as $value) {
             $model->load($value['id']);
             $model->delete();
         }
+    }
+
+    /**
+     * @param $idAttachment
+     * @return mixed
+     */
+    public function getStoreLinkByAttachment($idAttachment)
+    {
+        $collection = $this->getById()->getCollection();
+        $collection->addFieldToFilter('id_attachment', ['eq' => "$idAttachment"]);
+        return $collection->getData();
     }
 }

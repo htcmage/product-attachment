@@ -60,22 +60,10 @@ class FileInfo
     public function __construct(
         Filesystem $filesystem,
         Mime $mime
-    ) {
+    )
+    {
         $this->filesystem = $filesystem;
         $this->mime = $mime;
-    }
-
-    /**
-     * Get WriteInterface instance
-     *
-     * @return WriteInterface
-     */
-    private function getMediaDirectory()
-    {
-        if ($this->mediaDirectory === null) {
-            $this->mediaDirectory = $this->filesystem->getDirectoryWrite(DirectoryList::MEDIA);
-        }
-        return $this->mediaDirectory;
     }
 
     /**
@@ -91,6 +79,19 @@ class FileInfo
 
         $result = $this->mime->getMimeType($absoluteFilePath);
         return $result;
+    }
+
+    /**
+     * Get WriteInterface instance
+     *
+     * @return WriteInterface
+     */
+    private function getMediaDirectory()
+    {
+        if ($this->mediaDirectory === null) {
+            $this->mediaDirectory = $this->filesystem->getDirectoryWrite(DirectoryList::MEDIA);
+        }
+        return $this->mediaDirectory;
     }
 
     /**

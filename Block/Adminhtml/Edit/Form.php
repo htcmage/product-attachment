@@ -2,30 +2,45 @@
 
 namespace HTCMage\ProductAttachment\Block\Adminhtml\Edit;
 
-class Form extends \Magento\Backend\Block\Widget\Form\Generic
+use Magento\Backend\Block\Template\Context;
+use Magento\Backend\Block\Widget\Form\Generic;
+use Magento\Cms\Model\Wysiwyg\Config;
+use Magento\Framework\Data\FormFactory;
+use Magento\Framework\Registry;
+use Magento\Store\Model\System\Store;
+
+/**
+ * Class Form
+ * @package HTCMage\ProductAttachment\Block\Adminhtml\Edit
+ */
+class Form extends Generic
 {
-     /**
-     * @var \Magento\Store\Model\System\Store
+    /**
+     * @var Store
      */
     protected $_systemStore;
 
+    /**
+     * @var
+     */
     protected $_status;
 
     /**
-     * @param \Magento\Backend\Block\Template\Context $context
-     * @param \Magento\Framework\Registry $registry
-     * @param \Magento\Framework\Data\FormFactory $formFactory
-     * @param \Magento\Cms\Model\Wysiwyg\Config $wysiwygConfig
-     * @param \Magento\Store\Model\System\Store $systemStore
+     * @param Context $context
+     * @param Registry $registry
+     * @param FormFactory $formFactory
+     * @param Config $wysiwygConfig
+     * @param Store $systemStore
      * @param array $data
      */
     public function __construct(
-        \Magento\Backend\Block\Template\Context $context,
-        \Magento\Framework\Registry $registry,
-        \Magento\Framework\Data\FormFactory $formFactory,
-        \Magento\Store\Model\System\Store $systemStore,
+        Context $context,
+        Registry $registry,
+        FormFactory $formFactory,
+        Store $systemStore,
         array $data = []
-    ) {
+    )
+    {
         $this->_systemStore = $systemStore;
         parent::__construct($context, $registry, $formFactory, $data);
     }

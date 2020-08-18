@@ -4,23 +4,30 @@
  * See COPYING.txt for license details.
  */
 
-/** @var \Magento\Catalog\Block\Adminhtml\Category\AssignProducts $block */
+use Magento\Catalog\Block\Adminhtml\Category\AssignProducts;
+use Magento\Catalog\Block\Adminhtml\Category\Tab\Product;
 
-/** @var \Magento\Catalog\Block\Adminhtml\Category\Tab\Product $blockGrid */
+/** @var AssignProducts $block */
+
+/** @var Product $blockGrid */
 $blockGrid = $block->getBlockGrid();
 $gridJsObjectName = $blockGrid->getJsObjectName();
 ?>
 <?= $block->getGridHtml() ?>
-<input type="hidden" name="attachment_product" id="in_category_products" data-form-part="attachment_attachment_form" value="" />
+<input type="hidden" name="attachment_product" id="in_category_products" data-form-part="attachment_attachment_form"
+       value=""/>
 <script type="text/x-magento-init">
     {
         "*": {
             "Magento_Catalog/catalog/category/assign-products": {
-                "selectedProducts": <?= /* @escapeNotVerified */ $block->getProductsJson() ?>,
-                "gridJsObjectName": <?= /* @escapeNotVerified */ '"' . $gridJsObjectName . '"' ?: '{}' ?>
+                "selectedProducts": <?= /* @escapeNotVerified */
+    $block->getProductsJson() ?>,
+                "gridJsObjectName": <?= /* @escapeNotVerified */
+    '"' . $gridJsObjectName . '"' ?: '{}' ?>
             }
         }
     }
+
 </script>
 <!-- @todo remove when "UI components" will support such initialization -->
 <script>

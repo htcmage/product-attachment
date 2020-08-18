@@ -10,17 +10,32 @@
 namespace HTCMage\ProductAttachment\Model\Repository;
 
 use Exception;
+use HTCMage\ProductAttachment\Model\ResourceModel\ProductAttachmentFactory;
+use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Customer\Model\Context;
 use Magento\Customer\Model\Group;
 use Magento\Customer\Model\Session;
 use Magento\Store\Model\StoreManagerInterface;
 
 
+/**
+ * Class ProductAttachmentRepository
+ * @package HTCMage\ProductAttachment\Model\Repository
+ */
 class ProductAttachmentRepository
 {
 
+    /**
+     * @var ProductRepositoryInterface
+     */
+    protected $productRepository;
+    /**
+     * @var \HTCMage\ProductAttachment\Model\ProductAttachmentFactory
+     */
     private $productAttachmentFactory;
-
+    /**
+     * @var ResourceModel\Attachment|ProductAttachmentFactory
+     */
     private $resource;
 
     /**
@@ -34,11 +49,13 @@ class ProductAttachmentRepository
      */
     public function __construct(
         \HTCMage\ProductAttachment\Model\ProductAttachmentFactory $productAttachmentFactory,
-        \HTCMage\ProductAttachment\Model\ResourceModel\ProductAttachmentFactory $resource
+        ProductAttachmentFactory $resource,
+        ProductRepositoryInterface $productRepository
     )
     {
         $this->productAttachmentFactory = $productAttachmentFactory;
         $this->resource = $resource;
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -53,16 +70,6 @@ class ProductAttachmentRepository
         if ($id) {
             $this->resource->load($model, $id);
         }
-        return $model;
-    }
-
-    /**
-     * @param null $id
-     * @return mixed
-     */
-    public function create($id = null)
-    {
-        $model = $this->productAttachmentFactory->create();
         return $model;
     }
 
@@ -97,7 +104,37 @@ class ProductAttachmentRepository
         }
     }
 
+    /**
+     * @param $attachmentId
+     * @param $productId
+     */
+    public function deleteProduct($attachmentId, $productId)
+    {
+        $modelEnv = $this->create();
+        $data = $this->getProductByFilterAttachment($attachmentId);
 
+        foreach ($data as $value) {
+            if ($value['id_product'] == $productId) {
+                $modelEnv->load($value['id']);
+                $modelEnv->delete();
+            }
+        }
+    }
+
+    /**
+     * @param null $id
+     * @return mixed
+     */
+    public function create($id = null)
+    {
+        $model = $this->productAttachmentFactory->create();
+        return $model;
+    }
+
+    /**
+     * @param $idAttachment
+     * @return mixed
+     */
     public function getProductByFilterAttachment($idAttachment)
     {
         $collection = $this->create()->getCollection();
@@ -105,25 +142,78 @@ class ProductAttachmentRepository
         return $collection->getData();
     }
 
-    public function deleteProductsIfEdit($idCheck){
+    /**
+     * @param $attachmentId
+     */
+    public function deleteProductsIfEdit($attachmentId)
+    {
         $modelEnv = $this->create();
-        $data = $this->getProductByFilterAttachment($idCheck);
+        $data = $this->getProductByFilterAttachment($attachmentId);
+
         foreach ($data as $value) {
+            // Delete attribute
+            $product = $this->productRepository->getById($value['id_product']);
+            $attachment = $product->getData('attachment');
+            $listAttachment = explode(',', $attachment);
+            if (in_array($attachmentId, $listAttachment)) {
+                $key = array_search($attachmentId, $listAttachment);
+                unset($listAttachment[$key]);
+                $listAttachment = implode(',', $listAttachment);
+                $product->setData('attachment', $listAttachment);
+                $this->productRepository->save($product);
+            }
+
+            // Delete Product
             $modelEnv->load($value['id']);
             $modelEnv->delete();
         }
-
     }
 
-    public function addProductsAttachment($attachmentProduct, $idAttachment){
+    /**
+     * @param $attachmentId
+     * @param $productId
+     */
+    public function addProductAttachment($attachmentId, $productId)
+    {
         $modelEnv = $this->create();
-        if( isset($attachmentProduct) && ! empty($attachmentProduct)){
-            foreach ($attachmentProduct as $key => $value) {
-                $dataEnv['id_product'] = $key;
+        $dataEnv['id_product'] = $productId;
+        $dataEnv['id_attachment'] = $attachmentId;
+        $modelEnv->setData($dataEnv);
+        $modelEnv->save();
+    }
+
+    /**
+     * @param $attachmentProduct
+     * @param $idAttachment
+     */
+    public function addProductsAttachment($attachmentProduct, $idAttachment)
+    {
+
+        $modelEnv = $this->create();
+        if (!empty($attachmentProduct)) {
+            foreach ($attachmentProduct as $productId => $value) {
+                $dataEnv['id_product'] = $productId;
                 $dataEnv['id_attachment'] = $idAttachment;
                 $modelEnv->setData($dataEnv);
                 $modelEnv->save();
             }
+        }
+    }
+
+    /**
+     * @param $productId
+     * @param $attachmentId
+     */
+    public function getAttachmentOfProduct($productId, $attachmentId)
+    {
+        $product = $this->productRepository->getById($productId);
+        $attachment = $product->getData('attachment');
+        $listAttachment = explode(',', $attachment);
+        if (!in_array($attachmentId, $listAttachment)) {
+            array_push($listAttachment, $attachmentId);
+            $listAttachment = implode(',', $listAttachment);
+            $product->setData('attachment', $listAttachment);
+            $this->productRepository->save($product);
         }
     }
 }

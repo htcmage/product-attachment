@@ -1,64 +1,44 @@
 <?php
-/**
- * GiaPhuGroup Co., Ltd.
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the GiaPhuGroup.com license that is
- * available through the world-wide-web at this URL:
- * https://www.giaphugroup.com/LICENSE.txt
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this extension to newer
- * version in the future.
- *
- * @category    PHPCuong
- * @package     PHPCuong_BannerSlider
- * @copyright   Copyright (c) 2018-2019 GiaPhuGroup Co., Ltd. All rights reserved. (http://www.giaphugroup.com/)
- * @license     https://www.giaphugroup.com/LICENSE.txt
- */
 
 namespace HTCMage\ProductAttachment\Controller\Adminhtml\Attachment;
 
+use Exception;
+use HTCMage\ProductAttachment\Model\Attachment\FileUploader;
+use Magento\Backend\App\Action;
+use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\Controller\ResultInterface;
+use PHPCuong\BannerSlider\Model\Banner\ImageUploader;
 
 /**
  * Class Upload
  */
-class UploadFile extends \Magento\Backend\App\Action
+class UploadFile extends Action
 {
     /**
-     * Image Uploader
-     *
-     * @var \PHPCuong\BannerSlider\Model\Banner\ImageUploader
+     * @var FileUploader
      */
     protected $FileUploader;
 
     /**
      * Upload constructor.
      *
-     * @param \Magento\Backend\App\Action\Context $context
-     * @param \PHPCuong\BannerSlider\Model\Banner\ImageUploader $imageUploader
+     * @param Context $context
+     * @param ImageUploader $imageUploader
      */
     public function __construct(
-        \Magento\Backend\App\Action\Context $context,
-        \HTCMage\ProductAttachment\Model\Attachment\FileUploader $FileUploader
-    ) {
+        Context $context,
+        FileUploader $FileUploader
+    )
+    {
         parent::__construct($context);
         $this->FileUploader = $FileUploader;
     }
 
     /**
-     * Authorization level of a basic admin session
-     *
-     * @return bool
-     */
-
-    /**
      * Upload file controller action.
      *
-     * @return \Magento\Framework\Controller\ResultInterface
+     * @return ResultInterface
      */
     public function execute()
     {
@@ -73,7 +53,7 @@ class UploadFile extends \Magento\Backend\App\Action
                 'path' => $this->_getSession()->getCookiePath(),
                 'domain' => $this->_getSession()->getCookieDomain(),
             ];
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $resultFile = ['error' => $e->getMessage(), 'errorcode' => $e->getCode()];
         }
         return $this->resultFactory->create(ResultFactory::TYPE_JSON)->setData($resultFile);

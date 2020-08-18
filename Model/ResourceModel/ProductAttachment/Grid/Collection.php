@@ -2,14 +2,25 @@
 
 namespace HTCMage\ProductAttachment\Model\ResourceModel\ProductAttachment\Grid;
 
-use Magento\Framework\Data\Collection\EntityFactoryInterface;
-use Psr\Log\LoggerInterface;
+use HTCMage\ProductAttachment\Model\ResourceModel\Attachment;
+use HTCMage\ProductAttachment\Model\ResourceModel\Attachment\Collection as CommentCollection;
+use Magento\Framework\Api\Search\AggregationInterface;
+use Magento\Framework\Api\Search\DocumentInterface;
+use Magento\Framework\Api\Search\SearchResultInterface;
+use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Data\Collection\Db\FetchStrategyInterface;
+use Magento\Framework\Data\Collection\EntityFactoryInterface;
+use Magento\Framework\DataObject;
+use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\Event\ManagerInterface;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
-use Magento\Framework\Api\Search\SearchResultInterface;
-use \HTCMage\ProductAttachment\Model\ResourceModel\Attachment\Collection as CommentCollection;
+use Magento\Framework\View\Element\UiComponent\DataProvider\Document;
+use Psr\Log\LoggerInterface;
 
+/**
+ * Class Collection
+ * @package HTCMage\ProductAttachment\Model\ResourceModel\ProductAttachment\Grid
+ */
 class Collection extends CommentCollection implements SearchResultInterface
 {
     /**
@@ -26,7 +37,7 @@ class Collection extends CommentCollection implements SearchResultInterface
      * @param FetchStrategyInterface $fetchStrategy
      * @param ManagerInterface $eventManager
      * @param string $model
-     * @param \Magento\Framework\DB\Adapter\AdapterInterface|null $connection
+     * @param AdapterInterface|null $connection
      * @param AbstractDb|null $resource
      */
     public function __construct(
@@ -34,15 +45,16 @@ class Collection extends CommentCollection implements SearchResultInterface
         LoggerInterface $logger,
         FetchStrategyInterface $fetchStrategy,
         ManagerInterface $eventManager,
-        $model = \Magento\Framework\View\Element\UiComponent\DataProvider\Document::class,
-        \Magento\Framework\DB\Adapter\AdapterInterface $connection = null,
+        $model = Document::class,
+        AdapterInterface $connection = null,
         AbstractDb $resource = null
-    ) {
+    )
+    {
         parent::__construct($entityFactory, $logger, $fetchStrategy, $eventManager, $connection, $resource);
 
         $this->_init(
             $model,
-            \HTCMage\ProductAttachment\Model\ResourceModel\Attachment::class
+            Attachment::class
         );
     }
 
@@ -59,7 +71,7 @@ class Collection extends CommentCollection implements SearchResultInterface
     /**
      * Set Aggregations
      *
-     * @param \Magento\Framework\Api\Search\AggregationInterface $aggregations
+     * @param AggregationInterface $aggregations
      * @return void
      */
     public function setAggregations($aggregations)
@@ -70,7 +82,7 @@ class Collection extends CommentCollection implements SearchResultInterface
     /**
      * Get search criteria.
      *
-     * @return \Magento\Framework\Api\SearchCriteriaInterface|null
+     * @return SearchCriteriaInterface|null
      */
     public function getSearchCriteria()
     {
@@ -80,11 +92,11 @@ class Collection extends CommentCollection implements SearchResultInterface
     /**
      * Set search criteria.
      *
-     * @param \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria
+     * @param SearchCriteriaInterface $searchCriteria
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @return $this
      */
-    public function setSearchCriteria(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria = null)
+    public function setSearchCriteria(SearchCriteriaInterface $searchCriteria = null)
     {
         return $this;
     }
@@ -100,10 +112,7 @@ class Collection extends CommentCollection implements SearchResultInterface
     }
 
     /**
-     * Set total count.
-     *
-     * @param int $totalCount
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param $totalCount
      * @return $this
      */
     public function setTotalCount($totalCount)
@@ -112,11 +121,8 @@ class Collection extends CommentCollection implements SearchResultInterface
     }
 
     /**
-     * Set items list.
-     *
-     * @param array $items
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     * @return Collection
+     * @param array|null $items
+     * @return $this
      */
     public function setItems(array $items = null)
     {
@@ -126,7 +132,7 @@ class Collection extends CommentCollection implements SearchResultInterface
     /**
      * Get Item().
      *
-     * @return \Magento\Framework\Api\Search\DocumentInterface[]|\Magento\Framework\DataObject[].
+     * @return DocumentInterface[]|DataObject[].
      */
     public function getItems()
     {

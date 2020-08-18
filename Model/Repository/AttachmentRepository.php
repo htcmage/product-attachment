@@ -10,12 +10,19 @@
 namespace HTCMage\ProductAttachment\Model\Repository;
 
 use Exception;
+use HTCMage\ProductAttachment\Model\AttachmentFactory;
+use HTCMage\ProductAttachment\Model\ProductAttachmentFactory;
+use HTCMage\ProductAttachment\Model\ResourceModel\Attachment;
 use Magento\Customer\Model\Context;
 use Magento\Customer\Model\Group;
 use Magento\Customer\Model\Session;
 use Magento\Store\Model\StoreManagerInterface;
 
 
+/**
+ * Class AttachmentRepository
+ * @package HTCMage\ProductAttachment\Model\Repository
+ */
 class AttachmentRepository
 {
 
@@ -39,7 +46,13 @@ class AttachmentRepository
      */
     const DISPLAY_ATTACHMENT = 'htcmage_productattachment_display';
 
+    /**
+     *
+     */
     const ENABLE = '1';
+    /**
+     *
+     */
     const DISABLE = '0';
 
     /**
@@ -49,12 +62,24 @@ class AttachmentRepository
      */
     protected $mainTable = 'htcmage_productattachment';
 
+    /**
+     * @var AttachmentFactory
+     */
     private $attachmentFactory;
 
+    /**
+     * @var ResourceModel\Attachment|Attachment
+     */
     private $resource;
 
+    /**
+     * @var ProductAttachmentFactory
+     */
     private $resourceModelPA;
 
+    /**
+     * @var Session
+     */
     private $customerSession;
 
     /**
@@ -84,9 +109,9 @@ class AttachmentRepository
         StoreManagerInterface $storeManager,
         \Magento\Framework\App\Http\Context $httpContext,
         Session $customerSession,
-        \HTCMage\ProductAttachment\Model\AttachmentFactory $attachmentFactory,
-        \HTCMage\ProductAttachment\Model\ResourceModel\Attachment $resource,
-        \HTCMage\ProductAttachment\Model\ProductAttachmentFactory $resourceModelPA
+        AttachmentFactory $attachmentFactory,
+        Attachment $resource,
+        ProductAttachmentFactory $resourceModelPA
     )
     {
         $this->storeManager = $storeManager;
@@ -97,49 +122,17 @@ class AttachmentRepository
         $this->resourceModelPA = $resourceModelPA;
     }
 
-    public function getMainTable(){
+    /**
+     * @return mixed
+     */
+    public function getMainTable()
+    {
         return $this->resource->getTable($this->mainTable);
     }
 
     /**
-     * Get Customer Group
-     *
-     * @return int
+     * @return ProductAttachmentFactory
      */
-    public function getCustomerGroup()
-    {
-        if ($this->isCustomerLoggedIn()) {
-            return $this->httpContext->getValue(Context::CONTEXT_GROUP);
-        } else {
-            return Group::NOT_LOGGED_IN_ID;
-        }
-    }
-
-    /**
-     * Check Customer logged in
-     *
-     * @return mixed|null
-     */
-    public function isCustomerLoggedIn()
-    {
-        return $this->httpContext->getValue(Context::CONTEXT_AUTH);
-    }
-
-    /**
-     * Get Attachment by id
-     *
-     * @param int|null $id
-     * @return Attachment
-     */
-    public function load($id = null)
-    {
-        $model = $this->attachmentFactory->create();
-        if ($id) {
-            $this->resource->load($model, $id);
-        }
-        return $model;
-    }
-
     public function getResourceModelPA()
     {
         return $this->resourceModelPA;
@@ -177,7 +170,7 @@ class AttachmentRepository
      * @param Attachment $modelAttachment
      * @return bool
      */
-    public function delete(Attachment $modelAttachment)
+    public function delete($modelAttachment)
     {
         try {
             $this->resource->delete($modelAttachment);
@@ -202,8 +195,16 @@ class AttachmentRepository
         return $model;
     }
 
+    /**
+     * @param $display
+     * @param $store
+     * @param $customerGroup
+     * @param $productId
+     * @return mixed
+     */
     public function getAttachment($display, $store, $customerGroup, $productId)
     {
+        $stores = [0, $store];
         $adapter = $this->resource->getConnection();
         $storeTbl = $this->resource->getTable(self::STORE_VIEW_ATTACHMENT);
         $groupTbl = $this->resource->getTable(self::CUSTOMER_GROUP_ATTACHMENT);
@@ -231,7 +232,7 @@ class AttachmentRepository
         )->where(
             'status = ?', self::ENABLE
         )->where(
-            'storeViewTbl.store_id = ?', $store
+            'storeViewTbl.store_id IN (?)', $stores
         )->where(
             'groupTbl.group_id = ?', $customerGroup
         )->where(
@@ -239,9 +240,134 @@ class AttachmentRepository
         )->where(
             'displayTbl.display = ?', $display
         )->order(
-            'mainTbl.position DESC'
+            'mainTbl.position ASC'
         );
         return $adapter->query($select);
+    }
+
+    /**
+     * @param $store
+     * @param $productId
+     * @return array
+     */
+    public function getAttachments($store, $productId)
+    {
+        $stores = [0, $store];
+        $adapter = $this->resource->getConnection();
+        $storeTbl = $this->resource->getTable(self::STORE_VIEW_ATTACHMENT);
+        $productTbl = $this->resource->getTable(self::PRODUCT_ATTACHMENT);
+        $select = $adapter->select()->from(
+            ['mainTbl' => $this->resource->getMainTable()],
+            ['*']
+        )->joinLeft(
+            ['storeViewTbl' => $storeTbl],
+            'mainTbl.id = storeViewTbl.id_attachment',
+            []
+        )->joinLeft(
+            ['productTbl' => $productTbl],
+            'mainTbl.id = productTbl.id_attachment',
+            []
+        )->where(
+            'status = ?', self::ENABLE
+        )->where(
+            'storeViewTbl.store_id IN (?)', $stores
+        )->where(
+            'productTbl.id_product = ?', $productId
+        )->order(
+            'mainTbl.position ASC'
+        );
+
+        $query = $adapter->query($select);
+        $data = [];
+        while ($row = $query->fetch()) {
+            array_push($data, $row);
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param $store
+     * @param $customerGroup
+     * @param $idAttachment
+     * @return mixed
+     */
+    public function getAttachmentDownload($store, $customerGroup, $idAttachment)
+    {
+        $stores = [0, $store];
+        $adapter = $this->resource->getConnection();
+        $storeTbl = $this->resource->getTable(self::STORE_VIEW_ATTACHMENT);
+        $groupTbl = $this->resource->getTable(self::CUSTOMER_GROUP_ATTACHMENT);
+        $select = $adapter->select()->from(
+            ['mainTbl' => $this->resource->getMainTable()],
+            ['*']
+        )->joinLeft(
+            ['storeViewTbl' => $storeTbl],
+            'mainTbl.id = storeViewTbl.id_attachment',
+            []
+        )->joinLeft(
+            ['groupTbl' => $groupTbl],
+            'mainTbl.id = groupTbl.id_attachment',
+            []
+        )->where(
+            'mainTbl.id = ?', $idAttachment
+        )->where(
+            'status = ?', self::ENABLE
+        )->where(
+            'storeViewTbl.store_id IN (?)', $stores
+        )->where(
+            'groupTbl.group_id = ?', $customerGroup
+        );
+        return $adapter->fetchRow($select);
+    }
+
+    /**
+     * @param $store
+     * @return mixed
+     */
+    public function getAttachmentByStore($store)
+    {
+        $adapter = $this->resource->getConnection();
+        $storeTbl = $this->resource->getTable(self::STORE_VIEW_ATTACHMENT);
+        $stores = [0, $store];
+        $select = $adapter->select()->from(
+            ['mainTbl' => $this->resource->getMainTable()],
+            ['*']
+        )->joinLeft(
+            ['storeViewTbl' => $storeTbl],
+            'mainTbl.id = storeViewTbl.id_attachment',
+            []
+        )->where(
+            'storeViewTbl.store_id IN (?)', $stores
+        );
+        return $adapter->query($select);
+    }
+
+    /**
+     * @param $productId
+     * @return array
+     */
+    public function getAttachmentByProduct($productId)
+    {
+        $adapter = $this->resource->getConnection();
+        $productTbl = $this->resource->getTable(self::PRODUCT_ATTACHMENT);
+        $select = $adapter->select()->from(
+            ['mainTbl' => $this->resource->getMainTable()],
+            ['*']
+        )->joinLeft(
+            ['productViewTbl' => $productTbl],
+            'mainTbl.id = productViewTbl.id_attachment',
+            []
+        )->where(
+            'productViewTbl.id_product IN (?)', $productId
+        );
+        $query = $adapter->query($select);
+        $data = [];
+        while ($row = $query->fetch()) {
+            array_push($data, $row);
+        }
+
+        return $data;
     }
 
 }
