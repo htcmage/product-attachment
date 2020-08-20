@@ -1,0 +1,64 @@
+Save,Save
+Back,Back
+"Staff Information","Staff Information"
+"Save and Continue Edit","Save and Continue Edit"
+ID,ID
+Name,Name
+SKU,SKU
+Visibility,Visibility
+Status,Status
+Price,Price
+Position,Position
+"Product Attachment","Product Attachment"
+"Att has been deleted.","Att has been deleted."
+"We can't find a att to delete.","We can't find a att to delete."
+"This attachment not exists.","This attachment not exists."
+"Edit Product Attachment","Edit Product Attachment"
+"New Product Attachment","New Product Attachment"
+"Manage Product Attachment","Manage Product Attachment"
+"All Product Attachment","All Product Attachment"
+"A total of %1 record(s) have been deleted.","A total of %1 record(s) have been deleted."
+"A total of %1 record(s) have been disable.","A total of %1 record(s) have been disable."
+"A total of %1 record(s) have been enable.","A total of %1 record(s) have been enable."
+"Please enter all required information.","Please enter all required information."
+"Product Attachment saved","Product Attachment saved"
+"Something went wrong while saving the attachment","Something went wrong while saving the attachment"
+$e,$e
+"Download expired","Download expired"
+"There are no attachments","There are no attachments"
+"Something went wrong while saving the file(s).","Something went wrong while saving the file(s)."
+"File can not be saved to the destination folder.","File can not be saved to the destination folder."
+title,title
+Edit,Edit
+Delete,Delete
+"On tab information","On tab information"
+"On footer","On footer"
+"Under add to cart button","Under add to cart button"
+"File upload","File upload"
+"URL File","URL File"
+"Attachments Management","Attachments Management"
+"HTCMage Product Attachment Section","HTCMage Product Attachment Section"
+Attachments,Attachments
+HTCMage,HTCMage
+"General Configuration","General Configuration"
+"Module Enable","Module Enable"
+"General Information","General Information"
+"File Information","File Information"
+Title,Title
+Icon,Icon
+Type,Type
+Url,Url
+Limited,Limited
+"Number of download remaining","Number of download remaining"
+Group,Group
+"Store View","Store View"
+Display,Display
+"Assign Product","Assign Product"
+"Add New Product Attachment","Add New Product Attachment"
+"Are you sure you want to delete selected items?","Are you sure you want to delete selected items?"
+"Delete items","Delete items"
+"Are you sure you want to enable selected items?","Are you sure you want to enable selected items?"
+Enable,Enable
+"Are you sure you want to disable selected items?","Are you sure you want to disable selected items?"
+Disable,Disable
+File,File
