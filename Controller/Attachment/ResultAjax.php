@@ -1,13 +1,23 @@
 <?php
+/**
+ * *
+ *  *
+ *  *  NOTICE OF LICENSE
+ *  *   @author HTCMage Team
+ *  *   @copyright Copyright (c) 2020 HTCMage (https://www.htcmage.com)
+ *  *   @package HTCMage_ProductAttachment
+ *  *
+ *
+ */
 
 namespace HTCMage\ProductAttachment\Controller\Attachment;
 
+use HTCMage\ProductAttachment\Helper\Data;
 use HTCMage\ProductAttachment\Model\Repository\AttachmentRepository;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\View\Result\PageFactory;
-use HTCMage\ProductAttachment\Helper\Data;
 
 /**
  * Class ResultAjax

@@ -1,4 +1,15 @@
 <?xml version="1.0"?>
+<!--
+  ~ /**
+  ~  *
+  ~  *  NOTICE OF LICENSE
+  ~  *   @author HTCMage Team
+  ~  *   @copyright Copyright (c) 2020 HTCMage (https://www.htcmage.com)
+  ~  *   @package HTCMage_ProductAttachment
+  ~  *
+  ~  */
+  -->
+
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
     <event name="controller_action_catalog_product_save_entity_after">

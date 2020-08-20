@@ -1,4 +1,14 @@
 <?php
+/**
+ * *
+ *  *
+ *  *  NOTICE OF LICENSE
+ *  *   @author HTCMage Team
+ *  *   @copyright Copyright (c) 2020 HTCMage (https://www.htcmage.com)
+ *  *   @package HTCMage_ProductAttachment
+ *  *
+ *
+ */
 
 namespace HTCMage\ProductAttachment\Controller\Adminhtml\Attachment;
 
@@ -161,7 +171,7 @@ class Save extends Action
         $flag = true;
 
         foreach ($dataPost as $key => $value) {
-            if ( $key != 'id' && $key != 'url' && $key != 'position' && $key != 'number_of_download' ) {
+            if ($key != 'id' && $key != 'url' && $key != 'position' && $key != 'number_of_download') {
                 if ($value == '' || $value == []) {
                     $flag = false;
                     break;

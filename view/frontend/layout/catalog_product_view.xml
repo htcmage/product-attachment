@@ -1,10 +1,22 @@
 <?xml version="1.0"?>
+<!--
+  ~ /**
+  ~  *
+  ~  *  NOTICE OF LICENSE
+  ~  *   @author HTCMage Team
+  ~  *   @copyright Copyright (c) 2020 HTCMage (https://www.htcmage.com)
+  ~  *   @package HTCMage_ProductAttachment
+  ~  *
+  ~  */
+  -->
+
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceBlock name="product.info.details">
             <block class="HTCMage\ProductAttachment\Block\Products\Attachment\Attachment" name="attachment.tab"
-                   as="htc-tab-attachment" template="HTCMage_ProductAttachment::products/attachment.phtml" group="detailed_info"
+                   as="htc-tab-attachment" template="HTCMage_ProductAttachment::products/attachment.phtml"
+                   group="detailed_info"
                    ifconfig="attachment/general/enable">
                 <arguments>
                     <argument name="sort_order" xsi:type="string">40</argument>
@@ -14,7 +26,8 @@
         <referenceContainer name="product.info.main">
             <block class="Magento\Framework\View\Element\Template"
                    name="productattachment-after-addtocart-content"
-                   template="HTCMage_ProductAttachment::products/productattachment.phtml" after="-" ifconfig="attachment/general/enable">
+                   template="HTCMage_ProductAttachment::products/productattachment.phtml" after="-"
+                   ifconfig="attachment/general/enable">
                 <arguments>
                     <argument name="idProductAttachment" xsi:type="string">after-addtocart-attachment</argument>
                 </arguments>
@@ -33,7 +46,8 @@
         <referenceContainer name="content">
             <block class="HTCMage\ProductAttachment\Block\Products\Attachment\UpdateAttachment"
                    name="update.attachment.product"
-                   template="HTCMage_ProductAttachment::products/uploadproductattachment.phtml" ifconfig="attachment/general/enable"/>
+                   template="HTCMage_ProductAttachment::products/uploadproductattachment.phtml"
+                   ifconfig="attachment/general/enable"/>
         </referenceContainer>
     </body>
 </page>

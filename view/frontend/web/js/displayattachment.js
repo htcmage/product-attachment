@@ -1,3 +1,14 @@
+/*
+ * *
+ *  *
+ *  *  NOTICE OF LICENSE
+ *  *   @author HTCMage Team
+ *  *   @copyright Copyright (c) 2020 HTCMage (https://www.htcmage.com)
+ *  *   @package HTCMage_ProductAttachment
+ *  *
+ *
+ */
+
 define([
     'jquery',
     "mage/template"
@@ -53,7 +64,7 @@ define([
                     elementFooter.html(result.footer);
                     if (result.detail == "") {
                         tabAttachment.hide();
-                    }else{
+                    } else {
                         tabAttachment.show();
                     }
                 }

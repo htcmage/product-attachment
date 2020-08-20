@@ -1,4 +1,14 @@
 <?php
+/**
+ * *
+ *  *
+ *  *  NOTICE OF LICENSE
+ *  *   @author HTCMage Team
+ *  *   @copyright Copyright (c) 2020 HTCMage (https://www.htcmage.com)
+ *  *   @package HTCMage_ProductAttachment
+ *  *
+ *
+ */
 
 namespace HTCMage\ProductAttachment\Helper;
 
@@ -6,8 +16,9 @@ use Magento\Customer\Model\Context;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\Helper\AbstractHelper;
-use Magento\Store\Model\ScopeInterface;
 use Magento\Framework\UrlInterface;
+use Magento\Store\Model\ScopeInterface;
+use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * Class Data
@@ -31,7 +42,7 @@ class Data extends AbstractHelper
      */
     public function __construct(
         \Magento\Framework\App\Helper\Context $context,
-        \Magento\Store\Model\StoreManagerInterface $storeManagerInterface,
+        StoreManagerInterface $storeManagerInterface,
         Session $customerSession
     )
     {
@@ -67,7 +78,7 @@ class Data extends AbstractHelper
         return $this->scopeConfig->getValue('attachment/general/enable', $storeScope);
     }
 
-        /**
+    /**
      * @param $file
      * @return string
      */

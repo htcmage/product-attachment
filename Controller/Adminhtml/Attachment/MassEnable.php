@@ -1,4 +1,14 @@
 <?php
+/**
+ * *
+ *  *
+ *  *  NOTICE OF LICENSE
+ *  *   @author HTCMage Team
+ *  *   @copyright Copyright (c) 2020 HTCMage (https://www.htcmage.com)
+ *  *   @package HTCMage_ProductAttachment
+ *  *
+ *
+ */
 
 namespace HTCMage\ProductAttachment\Controller\Adminhtml\Attachment;
 
@@ -17,13 +27,13 @@ use Magento\Ui\Component\MassAction\Filter;
 class MassEnable extends Action
 {
     /**
-     * @var Filter
-     */
-    protected $filter;
-    /**
      * Const
      */
     const ATTACHMENT_ENABLE = 1;
+    /**
+     * @var Filter
+     */
+    protected $filter;
     /**
      * @var CollectionFactory
      */
@@ -52,7 +62,7 @@ class MassEnable extends Action
         $collection = $this->filter->getCollection($this->collectionFactory->create());
         $collectionSize = $collection->getSize();
         foreach ($collection as $attachment) {
-            $attachment->setData('status',$this::ATTACHMENT_ENABLE);
+            $attachment->setData('status', $this::ATTACHMENT_ENABLE);
             $attachment->save();
         }
 

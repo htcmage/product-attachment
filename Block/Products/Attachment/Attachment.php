@@ -1,4 +1,14 @@
 <?php
+/**
+ * *
+ *  *
+ *  *  NOTICE OF LICENSE
+ *  *   @author HTCMage Team
+ *  *   @copyright Copyright (c) 2020 HTCMage (https://www.htcmage.com)
+ *  *   @package HTCMage_ProductAttachment
+ *  *
+ *
+ */
 
 namespace HTCMage\ProductAttachment\Block\Products\Attachment;
 
@@ -62,7 +72,7 @@ class Attachment extends Template
      */
     public function getCountDownload($attachment)
     {
-         if ($attachment['limited'] == 1) {
+        if ($attachment['limited'] == 1) {
             if ($attachment['number_of_download'] > 0) {
                 if ($attachment['number_of_download'] == 1) {
                     return "(" . $attachment['number_of_download'] . " download)";

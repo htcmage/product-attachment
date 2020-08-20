@@ -1,10 +1,22 @@
 <?php
+/**
+ * *
+ *  *
+ *  *  NOTICE OF LICENSE
+ *  *   @author HTCMage Team
+ *  *   @copyright Copyright (c) 2020 HTCMage (https://www.htcmage.com)
+ *  *   @package HTCMage_ProductAttachment
+ *  *
+ *
+ */
+
 $listProductAttachment = $block->getData('listProductAttachment');
 ?>
 
 <?php foreach ($listProductAttachment as $attachment): ?>
-   	<div class="attachment-product-download" data-id-attachment="<?= $attachment['id'] ?>">
+    <div class="attachment-product-download" data-id-attachment="<?= $attachment['id'] ?>">
         <img src="<?= $block->getPathIcon($attachment['icon']) ?>" alt="<?= __($attachment['title']) ?>">
-        <p class="title"><?= __($attachment['title']) ?><span class="limit-download"><?= $block->getCountDownload($attachment) ?? "" ?></span></p>
+        <p class="title"><?= __($attachment['title']) ?><span
+                    class="limit-download"><?= $block->getCountDownload($attachment) ?? "" ?></span></p>
     </div>
 <?php endforeach ?>

@@ -1,33 +1,49 @@
-.attachment-product-download{
-	display: flex;
-	cursor: pointer;
-	&:hover{
-		.title{
-			&:after{
-				width: 100%;
-			}
-		}
-	}
-	img{
-		max-height: 30px;
-		padding-right: 10px;
-	}
-	.title{
-		line-height: 30px;
-    	height: 30px;
-    	&:after{
-    		background-color: #CCC;
-			content: '';
-		    height: 1px;
-		    left: 0;
-		    display: block;
-		    width: 0;
-		    transition: width .3s linear;
-		}
-    	.limit-download{
-    		padding-left: 5px;
-    		color: #999;
-    		font-size: 12px;
-    	}
-	}
+/*
+ * *
+ *  *
+ *  *  NOTICE OF LICENSE
+ *  *   @author HTCMage Team
+ *  *   @copyright Copyright (c) 2020 HTCMage (https://www.htcmage.com)
+ *  *   @package HTCMage_ProductAttachment
+ *  *
+ *
+ */
+
+.attachment-product-download {
+  display: flex;
+  cursor: pointer;
+
+  &:hover {
+    .title {
+      &:after {
+        width: 100%;
+      }
+    }
+  }
+
+  img {
+    max-height: 30px;
+    padding-right: 10px;
+  }
+
+  .title {
+    line-height: 30px;
+    height: 30px;
+
+    &:after {
+      background-color: #CCC;
+      content: '';
+      height: 1px;
+      left: 0;
+      display: block;
+      width: 0;
+      transition: width .3s linear;
+    }
+
+    .limit-download {
+      padding-left: 5px;
+      color: #999;
+      font-size: 12px;
+    }
+  }
 }

@@ -1,4 +1,14 @@
 <?php
+/**
+ * *
+ *  *
+ *  *  NOTICE OF LICENSE
+ *  *   @author HTCMage Team
+ *  *   @copyright Copyright (c) 2020 HTCMage (https://www.htcmage.com)
+ *  *   @package HTCMage_ProductAttachment
+ *  *
+ *
+ */
 
 namespace HTCMage\ProductAttachment\Controller\Adminhtml\Attachment;
 
@@ -17,14 +27,13 @@ use Magento\Ui\Component\MassAction\Filter;
 class MassDisable extends Action
 {
     /**
-     * @var Filter
-     */
-    protected $filter;
-    /**
      * Const
      */
     const ATTACHMENT_DISABLE = 0;
-
+    /**
+     * @var Filter
+     */
+    protected $filter;
     /**
      * @var CollectionFactory
      */
@@ -53,7 +62,7 @@ class MassDisable extends Action
         $collection = $this->filter->getCollection($this->collectionFactory->create());
         $collectionSize = $collection->getSize();
         foreach ($collection as $attachment) {
-            $attachment->setData('status',$this::ATTACHMENT_DISABLE);
+            $attachment->setData('status', $this::ATTACHMENT_DISABLE);
             $attachment->save();
         }
 
