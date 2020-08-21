@@ -1,11 +1,9 @@
 /*
- * *
- *  *
- *  *  NOTICE OF LICENSE
- *  *   @author HTCMage Team
- *  *   @copyright Copyright (c) 2020 HTCMage (https://www.htcmage.com)
- *  *   @package HTCMage_ProductAttachment
- *  *
+ * NOTICE OF LICENSE
+ *
+ * @author HTCMage Team
+ * @copyright Copyright (c) 2020 HTCMage (https://www.htcmage.com)
+ * @package HTCMage_ProductAttachment
  *
  */
 

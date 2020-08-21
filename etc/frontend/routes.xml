@@ -1,14 +1,12 @@
 <?xml version="1.0"?>
 
 <!--
-  ~ /**
-  ~  *
-  ~  *  NOTICE OF LICENSE
-  ~  *   @author HTCMage Team
-  ~  *   @copyright Copyright (c) 2020 HTCMage (https://www.htcmage.com)
-  ~  *   @package HTCMage_ProductAttachment
-  ~  *
-  ~  */
+  ~ NOTICE OF LICENSE
+  ~
+  ~ @author HTCMage Team
+  ~ @copyright Copyright (c) 2020 HTCMage (https://www.htcmage.com)
+  ~ @package HTCMage_ProductAttachment
+  ~
   -->
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
