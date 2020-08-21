@@ -73,7 +73,7 @@ class Attachment implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
-        $product = $observer->getData('product');
+        $product = $observer->getProduct();
         $productId = $product->getId();
         $storeId = $this->storeManager->getStore()->getId();
         $attachments = $this->attachmentRepository->getAttachments($storeId, $productId);
