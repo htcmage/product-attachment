@@ -34,7 +34,9 @@ define([
                             if (result.notification == 'true') {
                                 var link = document.createElement('a');
                                 link.href = result.url;
-                                link.download = result.file;
+                                if (result.file != "") {
+                                    link.download = result.file;
+                                }
                                 link.click();
                             } else {
                                 alert(result.notification);

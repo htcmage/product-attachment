@@ -80,6 +80,7 @@ class AttachmentDowload extends Action
             $notification = 'true';
             $url = "";
             $name = "";
+            $file = "";
             $attachment = $this->getAttachmentDownload();
             if (count($attachment)) {
                 if ($attachment['limited'] == 1) {

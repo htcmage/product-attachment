@@ -191,7 +191,7 @@
                 </item>
             </argument>
         </column>
-        <column name="file">
+        <column name="file" class="HTCMage\ProductAttachment\Ui\Component\Listing\Column\File">
             <settings>
                 <filter>text</filter>
                 <editor>
