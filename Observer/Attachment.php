@@ -79,10 +79,12 @@ class Attachment implements ObserverInterface
             $this->productAttachmentRepository->deleteProduct($attachment['id'], $productId);
         }
         $attachment = $product->getData('attachment');
-        $listAttachment = explode(',', $attachment);
-        if (!empty($listAttachment)) {
-            foreach ($listAttachment as $attachmentId) {
-                $this->productAttachmentRepository->addProductAttachment($attachmentId, $productId);
+        if ($attachment) {
+            $listAttachment = explode(',', $attachment);
+            if (!empty($listAttachment)) {
+                foreach ($listAttachment as $attachmentId) {
+                    $this->productAttachmentRepository->addProductAttachment($attachmentId, $productId);
+                }
             }
         }
         return $this;
