@@ -10,7 +10,7 @@
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
-    <event name="catalog_product_save_after">
+    <event name="controller_action_catalog_product_save_entity_after">
         <observer name="save_attchment_after_save_product" instance="HTCMage\ProductAttachment\Observer\Attachment"/>
     </event>
 </config>
