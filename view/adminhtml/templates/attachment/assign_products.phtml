@@ -23,20 +23,14 @@ $gridJsObjectName = $blockGrid->getJsObjectName();
 <script type="text/x-magento-init">
     {
         "*": {
-            "Magento_Catalog/catalog/category/assign-products": {
-                "selectedProducts": <?= /* @escapeNotVerified */
-    $block->getProductsJson() ?>,
-                "gridJsObjectName": <?= /* @escapeNotVerified */
-    '"' . $gridJsObjectName . '"' ?: '{}' ?>
+            "HTCMage_ProductAttachment/js/assign_products": {
+                "selectedProducts": <?= /* @noEscape */ $block->getProductsJson() ?>,
+                "gridJsObjectName": <?= /* @noEscape */ '"' . $gridJsObjectName . '"' ?: '{}' ?>
             }
         }
     }
-
-
-
 </script>
 <!-- @todo remove when "UI components" will support such initialization -->
 <script>
     require('mage/apply/main').apply();
-    // var isGenderMale = $('#gender_male_checkbox').is(":checked");
 </script>
