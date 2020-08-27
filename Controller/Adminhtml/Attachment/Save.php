@@ -29,10 +29,6 @@ use RuntimeException;
 class Save extends Action
 {
 
-    /**
-     * const
-     */
-    const ADMIN_RESOURCE = 'HTCMage_ProSlider::main';
 
     /**
      * @var AttachmentRepository
