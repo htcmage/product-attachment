@@ -30,6 +30,11 @@ class Save extends Action
 {
 
     /**
+     * const
+     */
+    const ADMIN_RESOURCE = 'HTCMage_ProSlider::main';
+
+    /**
      * @var AttachmentRepository
      */
     protected $attachmentRepository;
@@ -82,7 +87,6 @@ class Save extends Action
         FileUploader $fileUploader
     )
     {
-
         parent::__construct($context);
         $this->attachmentRepository = $attachmentRepository;
         $this->imageUploader = $imageUploader;
@@ -106,23 +110,20 @@ class Save extends Action
         if ($data) {
             $id = $this->getRequest()->getParam('id') ?? null;
             $attachmentRepository = $this->attachmentRepository->getById($id);
-
-            if (!$this->checkData($data) || !$this->validateData($data)) {
-                $this->messageManager->addError(__('Please enter all required information.'));
-                return $resultRedirect->setPath('attachment/attachment/edit', ['id' => $attachmentRepository->getId()]);
-            }
             $data = $this->fommatData($data);
-
             try {
                 $attachmentRepository->setData($data);
                 $this->attachmentRepository->save($attachmentRepository);
                 if ($this->attachmentRepository->save($attachmentRepository)) {
                     $attachmentId = $attachmentRepository->getId();
-                    $this->productAttachmentRepository->deleteProductsIfEdit($attachmentId);
-                    if (!empty($data['attachment_product'])) {
-                        $this->productAttachmentRepository->addProductsAttachment($data['attachment_product'], $attachmentId);
-                        foreach ($data['attachment_product'] as $productId => $value) {
-                            $this->productAttachmentRepository->getAttachmentOfProduct($productId, $attachmentId);
+                    if ( array_key_exists('attachment_product', $data) ) {
+                        $this->productAttachmentRepository->deleteProductsIfEdit($attachmentId);
+                        if (! empty($data['attachment_product'])) {
+                            
+                            $this->productAttachmentRepository->addProductsAttachment($data['attachment_product'], $attachmentId);
+                            foreach ($data['attachment_product'] as $productId => $value) {
+                                $this->productAttachmentRepository->getAttachmentOfProduct($productId, $attachmentId);
+                            }
                         }
                     }
                     $this->attachmentStoreViewRepository->saveStoreLinks($data['store_id'], $attachmentId);
@@ -146,38 +147,6 @@ class Save extends Action
             return $resultRedirect->setPath('*/*/edit', ['id' => $this->getRequest()->getParam('id')]);
         }
         return $resultRedirect->setPath('*/*/edit');
-    }
-
-    /**
-     * @param $data
-     * @return bool
-     */
-    public function checkData($data)
-    {
-        if (!isset($data['icon']) || !isset($data['title']) || !isset($data['customer_group']) || !isset($data['file']) || !isset($data['status'])) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * @param $dataPost
-     * @return bool
-     */
-    public function validateData($dataPost)
-    {
-        $flag = true;
-
-        foreach ($dataPost as $key => $value) {
-            if ($key != 'id' && $key != 'url' && $key != 'position' && $key != 'number_of_download') {
-                if ($value == '' || $value == []) {
-                    $flag = false;
-                    break;
-                }
-            }
-        }
-
-        return $flag;
     }
 
     /**
