@@ -129,6 +129,7 @@ class Save extends Action
                     $this->attachmentCustomerGroupRepository->saveGroupLinks($data['customer_group'], $attachmentId);
                     $this->attachmentDisplayRepositoryRepository->saveDisplayLinks($data['display'], $attachmentId);
                 }
+
                 $this->messageManager->addSuccess(__('Product Attachment saved'));
                 $this->_getSession()->setFormData(false);
                 if ($this->getRequest()->getParam('back')) {
@@ -140,6 +141,8 @@ class Save extends Action
             } catch (RuntimeException $e) {
                 $this->messageManager->addError($e->getMessage());
             } catch (Exception $e) {
+            	echo $e->getMessage();
+            	die;
                 $this->messageManager->addException($e, __('Something went wrong while saving the attachment'));
             }
             $this->_getSession()->setFormData($data);
