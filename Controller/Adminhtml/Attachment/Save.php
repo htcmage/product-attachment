@@ -180,7 +180,7 @@ class Save extends Action
      */
     protected function _isAllowed()
     {
-        return $this->_authorization->isAllowed('htcmage_productattachment::newattachment_save');
+        return $this->_authorization->isAllowed('HTCMage_ProductAttachment::save');
     }
 
 }
