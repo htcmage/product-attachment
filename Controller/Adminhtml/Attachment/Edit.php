@@ -137,6 +137,6 @@ class Edit extends Action
      */
     protected function _isAllowed()
     {
-        return $this->_authorization->isAllowed('htcmage_productattachment::attachment_save');
+        return $this->_authorization->isAllowed('HTCMage_ProductAttachment::save');
     }
 }

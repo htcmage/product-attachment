@@ -50,4 +50,13 @@ class NewAction extends Action
         $resultForward = $this->resultForwardFactory->create();
         return $resultForward->forward('edit');
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function _isAllowed()
+    {
+        return $this->_authorization->isAllowed('HTCMage_ProductAttachment::save');
+    }
+    
 }

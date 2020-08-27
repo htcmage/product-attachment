@@ -69,4 +69,13 @@ class Delete extends Action
         $this->messageManager->addError(__('We can\'t find a att to delete.'));
         return $resultRedirect->setPath('attachment/attachment/index');
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function _isAllowed()
+    {
+        return $this->_authorization->isAllowed('HTCMage_ProductAttachment::delete');
+    }
+    
 }
