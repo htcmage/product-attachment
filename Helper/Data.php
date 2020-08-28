@@ -11,10 +11,10 @@
 namespace HTCMage\ProductAttachment\Helper;
 
 use Magento\Customer\Model\Context;
-use Magento\Customer\Model\Session;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\UrlInterface;
+use Magento\Customer\Model\Group;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
@@ -25,9 +25,11 @@ use Magento\Store\Model\StoreManagerInterface;
 class Data extends AbstractHelper
 {
     /**
-     * @var Session
+     * HTTP context
+     *
+     * @var \Magento\Framework\App\Http\Context $httpContext
      */
-    protected $_customerSession;
+    private $httpContext;
     /**
      * @var StoreManagerInterface
      */
@@ -41,21 +43,36 @@ class Data extends AbstractHelper
     public function __construct(
         \Magento\Framework\App\Helper\Context $context,
         StoreManagerInterface $storeManagerInterface,
-        Session $customerSession
+        \Magento\Framework\App\Http\Context $httpContext
     )
     {
-        $this->_customerSession = $customerSession;
+        $this->httpContext = $httpContext;
         $this->storeManagerInterface = $storeManagerInterface;
         parent::__construct($context);
     }
 
     /**
-     * @return mixed
+     * Get Customer Group
+     *
+     * @return int
      */
     public function getCustomerGroup()
     {
-        $customerGroup = $this->_customerSession->getCustomer()->getGroupId();
-        return $customerGroup;
+        if ($this->isCustomerLoggedIn()) {
+            return $this->httpContext->getValue(Context::CONTEXT_GROUP);
+        } else {
+            return Group::NOT_LOGGED_IN_ID;
+        }
+    }
+
+    /**
+     * Check Customer logged in
+     *
+     * @return mixed|null
+     */
+    public function isCustomerLoggedIn()
+    {
+        return $this->httpContext->getValue(Context::CONTEXT_AUTH);
     }
 
     /**
